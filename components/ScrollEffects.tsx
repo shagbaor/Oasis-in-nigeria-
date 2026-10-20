@@ -57,7 +57,8 @@ export function ScrollEffects() {
     // siblings that enter together.
     const scan = () => {
       document.querySelectorAll<HTMLElement>(REVEAL_SELECTOR).forEach((el) => {
-        if (el.dataset.reveal !== undefined) return;
+        // Heroes have their own entrance animation (see globals.css).
+        if (el.dataset.reveal !== undefined || el.closest(".hero, .page-hero")) return;
         el.dataset.reveal = "";
         const siblings = el.parentElement ? [...el.parentElement.children] : [];
         el.style.setProperty("--reveal-delay", `${Math.min(siblings.indexOf(el), 5) * 70}ms`);
@@ -72,16 +73,38 @@ export function ScrollEffects() {
     window.addEventListener("resize", scheduleReveal);
     lenis.on("scroll", scheduleReveal);
 
+    // Scroll position and progress as CSS variables, for parallax, the sliding
+    // border bands and the progress bar.
+    const setScrollVars = ({ scroll, limit }: { scroll: number; limit: number }) => {
+      root.style.setProperty("--sy", scroll.toFixed(1));
+      root.style.setProperty("--progress", limit > 0 ? (scroll / limit).toFixed(4) : "0");
+    };
+    lenis.on("scroll", setScrollVars);
+    setScrollVars({ scroll: window.scrollY, limit: document.documentElement.scrollHeight - window.innerHeight });
+
+    // Glass tiles: move the specular highlight with the pointer.
+    const onPointerMove = (event: PointerEvent) => {
+      const tile = (event.target as Element | null)?.closest?.<HTMLElement>(".card-dark, .proverb-dark");
+      if (!tile) return;
+      const rect = tile.getBoundingClientRect();
+      tile.style.setProperty("--gx", `${event.clientX - rect.left}px`);
+      tile.style.setProperty("--gy", `${event.clientY - rect.top}px`);
+    };
+    document.addEventListener("pointermove", onPointerMove, { passive: true });
+
     return () => {
       mutations.disconnect();
       window.removeEventListener("scroll", scheduleReveal);
       window.removeEventListener("resize", scheduleReveal);
+      document.removeEventListener("pointermove", onPointerMove);
       cancelAnimationFrame(frame);
       root.classList.remove("reveal-ready");
+      root.style.removeProperty("--sy");
+      root.style.removeProperty("--progress");
       lenis.destroy();
       setSmoothScroll(null);
     };
   }, []);
 
-  return null;
+  return <div className="scroll-progress" aria-hidden="true" />;
 }

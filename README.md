@@ -94,7 +94,8 @@ The design and wording follow the *OASIS Founding Identity* (October 2026) and t
 - **Wording** — vision, mission, objectives, philosophy, principles and proverbs live in `lib/identity.ts`. Edit them there; the pages read from that file.
 - **Colours** — defined once at the top of `app/globals.css`. Text follows the palette's contrast table: Terracotta text only at 24px and above, never on Forest Green; buttons are Forest Green with white text.
 - **Type** — Palatino Linotype. Devices that have it (Windows, macOS) use it; others download TeX Gyre Pagella, a free Palatino design, from `public/fonts/` (GUST Font License, see `public/fonts/LICENSE-TeX-Gyre.txt`). Noto Serif fills in the Hausa letters ɗ and ƙ.
-- **Motion** — smooth scrolling (Lenis) and scroll-in animations live in `components/ScrollEffects.tsx`. Both switch off for visitors who prefer reduced motion.
+- **Motion** — smooth scrolling (Lenis), scroll-in reveals, parallax and the progress bar live in `components/ScrollEffects.tsx`; page transitions use React's `<ViewTransition>` in `app/(site)/template.tsx`; keyframes are in the Motion section of `app/globals.css`. All of it switches off for visitors who prefer reduced motion.
+- **Glass tiles** — the translucent cards and proverbs on dark sections use a frosted-glass style (Glass tiles section of `app/globals.css`), with a solid fallback for browsers without blur and for visitors who prefer reduced transparency.
 - **Pattern and border** — `public/patterns/tile.svg` (circles, waves, dots, leaf) and `public/patterns/band.svg` (triangle border) recreate the identity artwork.
 
 The logos in `public/` (`oasis-logo.svg`, `oasis-logo-reversed.svg` for dark backgrounds) and the favicon (`app/icon.svg`) are vector versions traced from the official artwork and filled with the exact palette colours. If you have the original vector logo files, drop them in to replace these.
