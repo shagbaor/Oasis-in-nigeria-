@@ -20,8 +20,9 @@ export function slugify(text: string) {
 
 export const CONTACT_SUBJECTS = [
   "General enquiry",
-  "Volunteering",
-  "Donation",
-  "Partnership",
   "Request support",
+  "Partnership",
+  "Funding",
+  "Research collaboration",
+  "Media",
 ] as const;

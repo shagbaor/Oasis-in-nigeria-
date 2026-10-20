@@ -4,7 +4,9 @@ Website for **OASIS — Outreach for Affirming Spaces, Inclusion and Sustainabil
 
 Built with [Next.js](https://nextjs.org) (React) and a [Neon](https://neon.tech) Postgres database, deployed on [Vercel](https://vercel.com).
 
-- `/` — landing page with a contact form (messages are saved to the database)
+- `/` — home: motto, vision and mission, objectives, latest research and blog, contact form (messages are saved to the database)
+- `/about` — the name, motto, political philosophy and principles
+- `/our-work` — thematic focus, the five objectives, OASIS Safe Ground
 - `/blog` — public blog
 - `/research` — research articles, each with an optional downloadable PDF
 - `/admin` — password-protected admin for writing blog posts and research, uploading images and PDFs, and reading messages
@@ -69,18 +71,23 @@ Images and PDFs are stored in the Neon database, split into 2 MB chunks so each 
 
 ## Brand
 
-Colours come from the *OASIS Official Colour Palette* (October 2026) and are defined once at the top of `app/globals.css`. Text colours follow the palette's contrast table: Terracotta is used for decoration and large headings only, and buttons are Forest Green with white text.
+The design and wording follow the *OASIS Founding Identity* (October 2026) and the *OASIS Official Colour Palette*.
+
+- **Wording** — vision, mission, objectives, philosophy, principles and proverbs live in `lib/identity.ts`. Edit them there; the pages read from that file.
+- **Colours** — defined once at the top of `app/globals.css`. Text follows the palette's contrast table: Terracotta text only at 24px and above, never on Forest Green; buttons are Forest Green with white text.
+- **Type** — TeX Gyre Pagella, as in the identity document, self-hosted from `app/fonts/` (GUST Font License, see `app/fonts/LICENSE-TeX-Gyre.txt`). Noto Serif fills in the Hausa letters ɗ and ƙ that Pagella lacks.
+- **Pattern and border** — `public/patterns/tile.svg` (circles, waves, dots, leaf) and `public/patterns/band.svg` (triangle border) recreate the identity artwork.
 
 The logos in `public/` (`oasis-logo.svg`, `oasis-logo-reversed.svg` for dark backgrounds) and the favicon (`app/icon.svg`) are vector versions traced from the official artwork and filled with the exact palette colours. If you have the original vector logo files, drop them in to replace these.
 
 ## Project layout
 
 ```
-app/(site)/          public pages: home, blog, blog post
+app/(site)/          public pages: home, about, our work, blog, research
 app/admin/           admin login, dashboard, post editor, messages
 app/admin/actions.ts admin Server Actions (all check the session first)
 components/          shared UI
-lib/                 database, queries and session helpers
+lib/                 database, queries, session helpers, identity text
 db/schema.sql        database tables
 ```
 

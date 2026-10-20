@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <g fill="none" stroke="#D7DFDB" stroke-opacity="0.45" stroke-width="2" stroke-linecap="round">
+    <!-- dotted cell lines -->
+    <path d="M72 0V144M0 72H144M0 0V144M0 0H144" stroke-width="1.5" stroke-dasharray="1 5" stroke-opacity="0.35"/>
+    <!-- concentric circles -->
+    <circle cx="36" cy="36" r="23"/>
+    <circle cx="36" cy="36" r="14"/>
+    <circle cx="36" cy="36" r="5"/>
+    <!-- waves -->
+    <path d="M90 26c4.5-5 9-5 13.5 0s9 5 13.5 0 9-5 13.5 0"/>
+    <path d="M90 37c4.5-5 9-5 13.5 0s9 5 13.5 0 9-5 13.5 0"/>
+    <path d="M90 48c4.5-5 9-5 13.5 0s9 5 13.5 0 9-5 13.5 0"/>
+    <!-- leaf -->
+    <path d="M108 87c11 8 13 27 0 42-13-15-11-34 0-42z"/>
+    <path d="M108 92v40M108 104l-7-6M108 104l7-6M108 115l-8-7M108 115l8-7"/>
+  </g>
+  <!-- dot grid -->
+  <g fill="#D7DFDB" fill-opacity="0.45">
+    <circle cx="21" cy="93" r="2.2"/><circle cx="31" cy="93" r="2.2"/><circle cx="41" cy="93" r="2.2"/><circle cx="51" cy="93" r="2.2"/>
+    <circle cx="21" cy="103" r="2.2"/><circle cx="31" cy="103" r="2.2"/><circle cx="41" cy="103" r="2.2"/><circle cx="51" cy="103" r="2.2"/>
+    <circle cx="21" cy="113" r="2.2"/><circle cx="31" cy="113" r="2.2"/><circle cx="41" cy="113" r="2.2"/><circle cx="51" cy="113" r="2.2"/>
+    <circle cx="21" cy="123" r="2.2"/><circle cx="31" cy="123" r="2.2"/><circle cx="41" cy="123" r="2.2"/><circle cx="51" cy="123" r="2.2"/>
+  </g>
+</svg>

@@ -1,9 +1,29 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import localFont from "next/font/local";
+import { Noto_Serif } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], weight: ["600", "700"] });
+// TeX Gyre Pagella, the typeface of the OASIS Founding Identity (GUST Font License).
+const pagella = localFont({
+  variable: "--font-pagella",
+  display: "swap",
+  src: [
+    { path: "./fonts/pagella-regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/pagella-italic.woff2", weight: "400", style: "italic" },
+    { path: "./fonts/pagella-bold.woff2", weight: "700", style: "normal" },
+    { path: "./fonts/pagella-bolditalic.woff2", weight: "700", style: "italic" },
+  ],
+});
+
+// Fallback for Hausa letters Pagella lacks (ɗ, ƙ), as in the identity document.
+// Not preloaded: browsers only fetch it when a page uses those characters.
+const notoSerif = Noto_Serif({
+  variable: "--font-noto-serif",
+  subsets: ["latin-ext"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  preload: false,
+});
 
 const siteHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 
@@ -14,10 +34,10 @@ export const metadata: Metadata = {
     template: "%s · OASIS",
   },
   description:
-    "OASIS is a non-profit building affirming spaces, advancing inclusion, and championing sustainable communities.",
+    "Protecting mental wellbeing and supporting practical recovery where climate disruption and exclusion meet in Nigeria.",
   openGraph: {
     title: "OASIS — Outreach for Affirming Spaces, Inclusion and Sustainability",
-    description: "Building affirming spaces, advancing inclusion, and championing sustainable communities.",
+    description: "Safety. Dignity. Recovery. Protecting mental wellbeing and supporting practical recovery where climate disruption and exclusion meet in Nigeria.",
     type: "website",
   },
 };
@@ -26,7 +46,7 @@ export const viewport: Viewport = { themeColor: "#22493c" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
+    <html lang="en-NG" className={`${pagella.variable} ${notoSerif.variable}`}>
       <body>{children}</body>
     </html>
   );

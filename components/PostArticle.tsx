@@ -39,7 +39,7 @@ export async function PostArticle({ kind, slug }: { kind: PostKind; slug: Promis
           <Link href={section.href} className="back-link">
             ← {section.label}
           </Link>
-          {kind === "research" && <p className="eyebrow">Research</p>}
+          {kind === "research" && <p className="label">Research</p>}
           <h1>{post.title}</h1>
           <time className="post-date" dateTime={post.published_at ? new Date(post.published_at).toISOString() : undefined}>
             {formatDate(post.published_at)}

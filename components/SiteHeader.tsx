@@ -5,11 +5,11 @@ import Link from "next/link";
 import { useState } from "react";
 
 const LINKS = [
-  { href: "/#about", label: "About" },
-  { href: "/#work", label: "Our Work" },
-  { href: "/#involved", label: "Get Involved" },
+  { href: "/about", label: "About" },
+  { href: "/our-work", label: "Our work" },
   { href: "/research", label: "Research" },
   { href: "/blog", label: "Blog" },
+  { href: "/#involved", label: "Work with us" },
 ];
 
 export function SiteHeader() {
@@ -40,7 +40,7 @@ export function SiteHeader() {
             </Link>
           ))}
           <Link href="/#contact" className="btn btn-small" onClick={close}>
-            Contact Us
+            Contact us
           </Link>
         </nav>
       </div>

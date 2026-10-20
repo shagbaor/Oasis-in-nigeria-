@@ -10,9 +10,9 @@ export default function ResearchPage() {
   return (
     <PostIndex
       kind="research"
-      eyebrow="Evidence & insight"
+      eyebrow="Evidence and insight"
       title="Research"
-      lead="Our studies, reports and findings on inclusion, affirming spaces and sustainable communities."
+      lead="Community-led evidence on climate displacement, mental wellbeing and recovery in Nigeria. We obtain consent, pay people for their expertise and return findings to communities."
     />
   );
 }

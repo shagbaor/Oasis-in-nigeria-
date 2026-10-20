@@ -10,9 +10,9 @@ export default function BlogPage() {
   return (
     <PostIndex
       kind="blog"
-      eyebrow="Stories & updates"
+      eyebrow="Stories and updates"
       title="The OASIS Blog"
-      lead="News from our programmes, voices from our community, and ways to take action."
+      lead="News and reflections from OASIS on safety, dignity and recovery."
     />
   );
 }

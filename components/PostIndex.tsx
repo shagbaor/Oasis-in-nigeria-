@@ -24,7 +24,7 @@ export function PostIndex({ kind, eyebrow, title, lead }: { kind: PostKind; eyeb
     <>
       <section className="page-hero">
         <div className="container">
-          <p className="eyebrow">{eyebrow}</p>
+          <p className="label">{eyebrow}</p>
           <h1>{title}</h1>
           <p className="lead">{lead}</p>
         </div>
