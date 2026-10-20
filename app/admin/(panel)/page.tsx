@@ -82,7 +82,7 @@ async function Dashboard() {
       )}
 
       <p className="small muted storage-note">
-        Uploaded images and PDFs use {formatBytes(storage)} of database storage (Neon&apos;s free plan includes 512 MB in total).
+        Uploaded images and PDFs use {formatBytes(storage)} of database storage. Your Neon console shows the plan&apos;s total limit.
       </p>
     </>
   );

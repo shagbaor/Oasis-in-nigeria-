@@ -45,6 +45,8 @@ Open http://localhost:3000 and http://localhost:3000/admin.
 
 ## Deploy on Vercel
 
+Server code runs in Frankfurt (`fra1`, set in `vercel.json`) to sit next to the Neon database in `aws-eu-central-1`, the closest region to Nigeria.
+
 1. Import this repo at [vercel.com/new](https://vercel.com/new). Vercel detects Next.js automatically.
 2. Under **Environment Variables**, add `DATABASE_URL`, `ADMIN_PASSWORD` and `SESSION_SECRET`.
 3. Click **Deploy**. Every push to `main` redeploys.
@@ -63,7 +65,7 @@ Posts stay as drafts until you tick **Published**.
 
 ### How files are stored
 
-Images and PDFs are stored in the Neon database, split into 2 MB chunks so each upload stays under Vercel's request size limit. Files are served from `/files/<id>/<name>` and cached by the browser and Vercel's CDN. When a post is deleted, or an image or PDF is removed from it, the file is deleted too. The admin dashboard shows how much storage files use (Neon's free plan includes 512 MB in total).
+Images and PDFs are stored in the Neon database, split into 2 MB chunks so each upload stays under Vercel's request size limit. Files are served from `/files/<id>/<name>` and cached by the browser and Vercel's CDN. When a post is deleted, or an image or PDF is removed from it, the file is deleted too. The admin dashboard shows how much storage files use; check the Neon console for your plan's limit.
 
 ## Brand
 
