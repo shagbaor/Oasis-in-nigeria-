@@ -189,3 +189,30 @@ export const PROVERBS = {
     meaning: "Together, we are stronger than any crisis.",
   },
 } satisfies Record<string, Proverb>;
+
+// Ways to work with OASIS. Not from the identity document itself; worded from
+// its partnership, funding and non-extractive research commitments.
+export const WAYS_TO_WORK = [
+  {
+    title: "Community and care partners",
+    text: "Community, healthcare and housing organisations who share our commitment to safety, dignity and recovery.",
+    subject: "Partnership",
+    cta: "Partner with us",
+  },
+  {
+    title: "Funders",
+    text: "Funding that supports community-defined goals, with communities shaping priorities, budgets and evidence.",
+    subject: "Funding",
+    cta: "Talk to us about funding",
+  },
+  {
+    title: "Research collaborators",
+    text: "Non-extractive research: we obtain consent, pay people for their expertise and return findings to communities.",
+    subject: "Research collaboration",
+    cta: "Collaborate on research",
+  },
+];
+
+export function contactHref(subject?: string) {
+  return subject ? `/contact?subject=${encodeURIComponent(subject)}` : "/contact";
+}

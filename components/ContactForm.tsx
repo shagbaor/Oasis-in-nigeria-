@@ -1,13 +1,18 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useRef, useState } from "react";
+import { startTransition, useActionState, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { sendMessage, type ContactState } from "@/app/(site)/actions";
 import { CONTACT_SUBJECTS } from "@/lib/format";
 
-export const SUBJECT_EVENT = "oasis:subject";
+// Links like /contact?subject=Funding preselect the subject.
+function subjectFromUrl(value: string | null) {
+  return (CONTACT_SUBJECTS as readonly string[]).includes(value ?? "") ? (value as string) : CONTACT_SUBJECTS[0];
+}
 
 export function ContactForm() {
-  const [subject, setSubject] = useState<string>(CONTACT_SUBJECTS[0]);
+  const searchParams = useSearchParams();
+  const [subject, setSubject] = useState<string>(() => subjectFromUrl(searchParams.get("subject")));
   const formRef = useRef<HTMLFormElement>(null);
   const [state, action, pending] = useActionState<ContactState, FormData>(async (prev, formData) => {
     const result = await sendMessage(prev, formData);
@@ -24,13 +29,6 @@ export function ContactForm() {
     const formData = new FormData(event.currentTarget);
     startTransition(() => action(formData));
   };
-
-  // "Get involved" links preselect the subject.
-  useEffect(() => {
-    const onSubject = (event: Event) => setSubject((event as CustomEvent<string>).detail);
-    window.addEventListener(SUBJECT_EVENT, onSubject);
-    return () => window.removeEventListener(SUBJECT_EVENT, onSubject);
-  }, []);
 
   return (
     <form ref={formRef} onSubmit={onSubmit} className="contact-form">

@@ -1,33 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { connection } from "next/server";
-import { ContactForm } from "@/components/ContactForm";
-import { SubjectLink } from "@/components/SubjectLink";
 import { PostCard } from "@/components/PostCard";
 import { Band, Label, PatternPanel, ProverbBox } from "@/components/Brand";
 import { listPublishedPosts, type PostKind } from "@/lib/posts";
-import { FULL_NAME, MISSION, MISSION_AREAS, OBJECTIVES, PROVERBS, PURPOSE, VISION } from "@/lib/identity";
-
-const WAYS = [
-  {
-    title: "Community and care partners",
-    text: "Community, healthcare and housing organisations who share our commitment to safety, dignity and recovery.",
-    subject: "Partnership",
-    cta: "Partner with us",
-  },
-  {
-    title: "Funders",
-    text: "Funding that supports community-defined goals, with communities shaping priorities, budgets and evidence.",
-    subject: "Funding",
-    cta: "Talk to us about funding",
-  },
-  {
-    title: "Research collaborators",
-    text: "Non-extractive research: we obtain consent, pay people for their expertise and return findings to communities.",
-    subject: "Research collaboration",
-    cta: "Collaborate on research",
-  },
-];
+import { FULL_NAME, MISSION, MISSION_AREAS, OBJECTIVES, PROVERBS, PURPOSE, VISION, WAYS_TO_WORK, contactHref } from "@/lib/identity";
 
 async function LatestPosts({ kind }: { kind: PostKind }) {
   await connection();
@@ -79,9 +56,9 @@ export default function HomePage() {
               <Link href="/our-work" className="btn">
                 Our work
               </Link>
-              <a href="#contact" className="btn btn-outline">
+              <Link href="/contact" className="btn btn-outline">
                 Get in touch
-              </a>
+              </Link>
             </div>
             <ProverbBox proverb={PROVERBS.palace} />
           </div>
@@ -155,13 +132,15 @@ export default function HomePage() {
             <ProverbBox proverb={PROVERBS.oneHand} dark />
           </div>
           <div className="involved-cards">
-            {WAYS.map((way) => (
-              <article className="card card-dark" key={way.title}>
+            {WAYS_TO_WORK.map((way) => (
+              <Link href={contactHref(way.subject)} className="card card-dark card-link" key={way.title}>
                 <h3>{way.title}</h3>
-                <p>{way.text}</p>
-                <SubjectLink subject={way.subject}>{way.cta}</SubjectLink>
-              </article>
+                <span className="link-arrow">{way.cta}</span>
+              </Link>
             ))}
+            <Link href="/work-with-us" className="btn btn-light">
+              More about working with us
+            </Link>
           </div>
         </div>
       </section>
@@ -171,7 +150,7 @@ export default function HomePage() {
       </Suspense>
 
       <section className="section section-white" id="contact">
-        <div className="container split">
+        <div className="container contact-teaser">
           <div>
             <Label>Get in touch</Label>
             <h2>We&apos;d love to hear from you</h2>
@@ -179,21 +158,14 @@ export default function HomePage() {
               Whether you are looking for support, or want to partner, fund or collaborate with us, send us a message.
               Every enquiry is treated confidentially.
             </p>
-            <p className="safety-note">
-              <strong>If you are in immediate danger,</strong> call <a href="tel:112">112</a>, Nigeria&apos;s national
-              emergency number.
-            </p>
-            <ul className="contact-list">
-              <li>
-                <span>Email</span>
-                <a href="mailto:hello@oasis.org">hello@oasis.org</a>
-              </li>
-              <li>
-                <span>Location</span>Nigeria
-              </li>
-            </ul>
+            <Link href="/contact" className="btn">
+              Contact us
+            </Link>
           </div>
-          <ContactForm />
+          <p className="safety-note">
+            <strong>If you are in immediate danger,</strong> call <a href="tel:112">112</a>, Nigeria&apos;s national
+            emergency number.
+          </p>
         </div>
       </section>
     </>

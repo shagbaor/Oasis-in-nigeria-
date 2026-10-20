@@ -4,9 +4,11 @@ Website for **OASIS — Outreach for Affirming Spaces, Inclusion and Sustainabil
 
 Built with [Next.js](https://nextjs.org) (React) and a [Neon](https://neon.tech) Postgres database, deployed on [Vercel](https://vercel.com).
 
-- `/` — home: motto, vision and mission, objectives, latest research and blog, contact form (messages are saved to the database)
+- `/` — home: motto, vision and mission, objectives, latest research and blog, with previews linking to every page
 - `/about` — the name, motto, political philosophy and principles
 - `/our-work` — thematic focus, the five objectives, OASIS Safe Ground
+- `/work-with-us` — partnership, funding and research collaboration
+- `/contact` — contact form (messages are saved to the database); `/contact?subject=Funding` preselects a subject
 - `/blog` — public blog
 - `/research` — research articles, each with an optional downloadable PDF
 - `/admin` — password-protected admin for writing blog posts and research, uploading images and PDFs, and reading messages

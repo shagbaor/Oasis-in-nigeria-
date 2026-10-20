@@ -24,7 +24,8 @@ export function SiteFooter() {
             <Link href="/our-work">Our work</Link>
             <Link href="/research">Research</Link>
             <Link href="/blog">Blog</Link>
-            <Link href="/#contact">Contact</Link>
+            <Link href="/work-with-us">Work with us</Link>
+            <Link href="/contact">Contact</Link>
           </nav>
           <p className="small">
             &copy; <CurrentYear /> OASIS. All rights reserved.

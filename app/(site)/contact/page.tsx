@@ -1,0 +1,54 @@
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { ContactForm } from "@/components/ContactForm";
+import { Label } from "@/components/Brand";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Contact OASIS for support, partnership, funding or research collaboration. Every enquiry is treated confidentially.",
+};
+
+export default function ContactPage() {
+  return (
+    <>
+      <section className="page-hero">
+        <div className="container">
+          <Label>Get in touch</Label>
+          <h1>We&apos;d love to hear from you</h1>
+          <p className="lead">
+            Whether you are looking for support, or want to partner, fund or collaborate with us, send us a message.
+          </p>
+        </div>
+      </section>
+
+      <section className="section section-white">
+        <div className="container split">
+          <div>
+            <p className="safety-note">
+              <strong>If you are in immediate danger,</strong> call <a href="tel:112">112</a>, Nigeria&apos;s national
+              emergency number.
+            </p>
+            <h2 className="contact-heading">Confidential by default</h2>
+            <p className="muted">
+              Every enquiry is treated confidentially. We protect choice, dignity and confidentiality, and we never
+              require trauma stories or photographs.
+            </p>
+            <ul className="contact-list">
+              <li>
+                <span>Email</span>
+                <a href="mailto:hello@oasis.org">hello@oasis.org</a>
+              </li>
+              <li>
+                <span>Location</span>Nigeria
+              </li>
+            </ul>
+          </div>
+          {/* The form reads ?subject= from the URL, which is only known at request time. */}
+          <Suspense fallback={<div className="contact-form" aria-busy="true" />}>
+            <ContactForm />
+          </Suspense>
+        </div>
+      </section>
+    </>
+  );
+}

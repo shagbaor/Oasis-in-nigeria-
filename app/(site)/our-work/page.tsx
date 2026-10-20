@@ -100,7 +100,7 @@ export default function OurWorkPage() {
               ))}
             </ul>
             <div className="work-cta">
-              <Link href="/#contact" className="btn">
+              <Link href="/work-with-us" className="btn">
                 Partner with us
               </Link>
               <Link href="/research" className="btn btn-outline">
