@@ -4,7 +4,7 @@ import { connection } from "next/server";
 import { ContactForm } from "@/components/ContactForm";
 import { SubjectLink } from "@/components/SubjectLink";
 import { PostCard } from "@/components/PostCard";
-import { listPublishedPosts } from "@/lib/posts";
+import { listPublishedPosts, type PostKind } from "@/lib/posts";
 
 const PILLARS = [
   {
@@ -58,27 +58,28 @@ const WAYS = [
   },
 ];
 
-async function LatestPosts() {
+async function LatestPosts({ kind }: { kind: PostKind }) {
   await connection();
   let posts;
   try {
-    posts = await listPublishedPosts(3);
+    posts = await listPublishedPosts(kind, 3);
   } catch (error) {
-    console.error("Could not load latest posts", error);
+    console.error(`Could not load latest ${kind} posts`, error);
     return null;
   }
   if (posts.length === 0) return null;
 
+  const research = kind === "research";
   return (
-    <section className="section section-tint" id="blog">
+    <section className={`section${research ? "" : " section-tint"}`} id={kind}>
       <div className="container">
         <div className="section-head section-head-row">
           <div>
-            <p className="eyebrow">Stories &amp; updates</p>
-            <h2>From our blog</h2>
+            <p className="eyebrow">{research ? "Evidence & insight" : "Stories & updates"}</p>
+            <h2>{research ? "Latest research" : "From our blog"}</h2>
           </div>
-          <Link href="/blog" className="link-arrow link-arrow-teal">
-            All posts
+          <Link href={`/${kind}`} className="link-arrow link-arrow-teal">
+            {research ? "All research" : "All posts"}
           </Link>
         </div>
         <div className="cards cards-3">
@@ -207,7 +208,11 @@ export default function HomePage() {
       </section>
 
       <Suspense fallback={null}>
-        <LatestPosts />
+        <LatestPosts kind="research" />
+      </Suspense>
+
+      <Suspense fallback={null}>
+        <LatestPosts kind="blog" />
       </Suspense>
 
       <section className="section" id="contact">

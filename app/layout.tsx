@@ -5,7 +5,10 @@ import "./globals.css";
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], weight: ["600", "700"] });
 
+const siteHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteHost ? `https://${siteHost}` : "http://localhost:3000"),
   title: {
     default: "OASIS — Outreach for Affirming Spaces, Inclusion and Sustainability",
     template: "%s · OASIS",

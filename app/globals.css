@@ -218,7 +218,7 @@ p { margin: 0 0 1em; }
 .contact-form { background: var(--white); padding: clamp(24px, 4vw, 40px); border-radius: var(--radius); box-shadow: var(--shadow); }
 .contact-form label, .admin-form label { display: grid; gap: 6px; font-weight: 500; font-size: 0.95rem; }
 .contact-form input, .contact-form select, .contact-form textarea,
-.admin-form input:not([type="checkbox"]), .admin-form textarea {
+.admin-form input:not([type="checkbox"]):not([type="file"]), .admin-form textarea {
   font: inherit; padding: 12px 14px; border: 1.5px solid #d6dedc; border-radius: 10px; background: var(--sand-50); color: var(--ink); width: 100%;
 }
 .contact-form :is(input, select, textarea):focus, .admin-form :is(input, textarea):focus { border-color: var(--teal-500); }
@@ -286,3 +286,31 @@ p { margin: 0 0 1em; }
   html { scroll-behavior: auto; }
   .btn, .card { transition: none; }
 }
+
+/* Research and uploads */
+.tag {
+  display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--teal-900); background: var(--teal-100); padding: 2px 10px; border-radius: 999px; margin-bottom: 10px;
+}
+.download-box {
+  margin-top: 48px; padding: 24px; border-radius: var(--radius); background: var(--white); box-shadow: var(--shadow);
+  border-left: 4px solid var(--sun); display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.download-box strong { display: block; font-family: var(--font-head); font-size: 1.2rem; color: var(--teal-900); }
+.download-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn-outline { background: transparent; border-color: var(--teal-700); color: var(--teal-700); }
+.btn-outline:hover { box-shadow: none; background: var(--teal-100); }
+.btn.is-disabled { opacity: 0.5; cursor: not-allowed; }
+label.btn { display: inline-block; font-size: 0.95rem; justify-self: start; }
+
+.admin-form select {
+  font: inherit; padding: 12px 14px; border: 1.5px solid #d6dedc; border-radius: 10px; background: var(--sand-50); color: var(--ink); width: 100%;
+}
+.field { display: grid; gap: 8px; }
+.field-label { font-weight: 500; font-size: 0.95rem; }
+.field-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cover-preview { display: flex; align-items: center; gap: 16px; }
+.cover-preview img { width: 180px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); }
+.pdf-chip { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border: 1.5px dashed var(--line); border-radius: 10px; }
+.pdf-chip a { font-weight: 600; }
+.storage-note { margin-top: 20px; }

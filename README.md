@@ -6,7 +6,8 @@ Built with [Next.js](https://nextjs.org) (React) and a [Neon](https://neon.tech)
 
 - `/` — landing page with a contact form (messages are saved to the database)
 - `/blog` — public blog
-- `/admin` — password-protected admin for writing posts and reading messages
+- `/research` — research articles, each with an optional downloadable PDF
+- `/admin` — password-protected admin for writing blog posts and research, uploading images and PDFs, and reading messages
 
 ## Setup
 
@@ -50,9 +51,19 @@ Open http://localhost:3000 and http://localhost:3000/admin.
 
 Tip: Vercel's Neon integration (Storage → Create Database → Neon) can create the database and set `DATABASE_URL` for you.
 
-## Writing posts
+## Writing blog posts and research
 
-Sign in at `/admin`, click **New post**, and write in Markdown. Posts stay as drafts until you tick **Published**. Cover images and inline images use image URLs.
+Sign in at `/admin` and click **New post**. Choose **Blog post** or **Research**, then write in Markdown.
+
+- **Insert image** uploads a picture and places it where your cursor is. Large photos are shrunk in the browser (max 1800px) before uploading.
+- **Upload cover image** sets the picture shown at the top and on cards.
+- **Attach PDF** adds a download button at the end of the post (up to 25 MB).
+
+Posts stay as drafts until you tick **Published**.
+
+### How files are stored
+
+Images and PDFs are stored in the Neon database, split into 2 MB chunks so each upload stays under Vercel's request size limit. Files are served from `/files/<id>/<name>` and cached by the browser and Vercel's CDN. When a post is deleted, or an image or PDF is removed from it, the file is deleted too. The admin dashboard shows how much storage files use (Neon's free plan includes 512 MB in total).
 
 ## Project layout
 

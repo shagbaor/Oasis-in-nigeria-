@@ -19,6 +19,7 @@ export function SiteFooter() {
         <p>Outreach for Affirming Spaces, Inclusion and Sustainability</p>
         <nav className="footer-links" aria-label="Footer">
           <Link href="/#about">About</Link>
+          <Link href="/research">Research</Link>
           <Link href="/blog">Blog</Link>
           <Link href="/#contact">Contact</Link>
         </nav>

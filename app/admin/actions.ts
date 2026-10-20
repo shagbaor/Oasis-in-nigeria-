@@ -3,7 +3,9 @@
 import { redirect } from "next/navigation";
 import { refresh } from "next/cache";
 import { checkAdminPassword, createSession, deleteSession, requireAdmin } from "@/lib/session";
-import { createPost, deletePost, updatePost, type PostInput } from "@/lib/posts";
+import { POST_KINDS, createPost, deletePost, updatePost, type PostInput, type PostKind } from "@/lib/posts";
+import { getFile } from "@/lib/files";
+import { PDF_TYPE } from "@/lib/uploads";
 import { deleteMessage, setMessageRead } from "@/lib/messages";
 import { isUniqueViolation } from "@/lib/db";
 import { slugify } from "@/lib/format";
@@ -26,25 +28,29 @@ export async function logout() {
   redirect("/admin/login");
 }
 
-function readPostForm(formData: FormData): PostInput | string {
+async function readPostForm(formData: FormData): Promise<PostInput | string> {
+  const rawKind = String(formData.get("kind") ?? "");
+  const kind: PostKind = (POST_KINDS as readonly string[]).includes(rawKind) ? (rawKind as PostKind) : "blog";
   const title = String(formData.get("title") ?? "").trim();
   const slug = slugify(String(formData.get("slug") ?? "").trim() || title);
   const excerpt = String(formData.get("excerpt") ?? "").trim();
   const content = String(formData.get("content") ?? "");
   const cover = String(formData.get("cover_image_url") ?? "").trim();
+  const pdfId = String(formData.get("pdf_file_id") ?? "").trim();
   const published = formData.get("published") === "on";
 
   if (!title) return "Please add a title.";
   if (!slug) return "Please add a URL slug using letters or numbers.";
-  if (cover && !/^https?:\/\//i.test(cover)) return "The cover image must be a full http(s) URL.";
+  if (cover && !/^(https?:\/\/|\/files\/)/i.test(cover)) return "The cover image must be an uploaded image or a full http(s) URL.";
+  if (pdfId && (await getFile(pdfId))?.content_type !== PDF_TYPE) return "The attached PDF could not be found. Please upload it again.";
 
-  return { title, slug, excerpt, content, cover_image_url: cover || null, published };
+  return { kind, title, slug, excerpt, content, cover_image_url: cover || null, pdf_file_id: pdfId || null, published };
 }
 
 export async function savePost(_prev: FormState, formData: FormData): Promise<FormState> {
   await requireAdmin();
 
-  const input = readPostForm(formData);
+  const input = await readPostForm(formData);
   if (typeof input === "string") return { error: input };
 
   const id = Number(formData.get("id")) || null;

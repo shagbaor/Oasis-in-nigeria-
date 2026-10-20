@@ -16,6 +16,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
           <nav aria-label="Admin">
             <Link href="/admin">Posts</Link>
+            <Link href="/admin/posts/new">New post</Link>
             <Link href="/admin/messages">Messages</Link>
             <Link href="/" target="_blank">
               View site

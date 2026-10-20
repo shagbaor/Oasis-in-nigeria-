@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { requireAdmin } from "@/lib/session";
-import { listAllPosts } from "@/lib/posts";
+import { listAllPosts, postPath } from "@/lib/posts";
+import { storageUsed } from "@/lib/files";
+import { formatBytes } from "@/lib/uploads";
 import { countUnreadMessages } from "@/lib/messages";
 import { formatDate } from "@/lib/format";
 import { removePost } from "../actions";
@@ -9,12 +11,12 @@ import { ConfirmButton } from "./ConfirmButton";
 
 async function Dashboard() {
   await requireAdmin();
-  const [posts, unread] = await Promise.all([listAllPosts(), countUnreadMessages()]);
+  const [posts, unread, storage] = await Promise.all([listAllPosts(), countUnreadMessages(), storageUsed()]);
 
   return (
     <>
       <div className="admin-title">
-        <h1>Posts</h1>
+        <h1>Blog &amp; research</h1>
         <Link href="/admin/posts/new" className="btn btn-small">
           New post
         </Link>
@@ -34,6 +36,7 @@ async function Dashboard() {
             <thead>
               <tr>
                 <th>Title</th>
+                <th>Type</th>
                 <th>Status</th>
                 <th>Date</th>
                 <th>
@@ -48,8 +51,9 @@ async function Dashboard() {
                     <Link href={`/admin/posts/${post.id}`} className="admin-post-title">
                       {post.title}
                     </Link>
-                    <div className="small muted">/blog/{post.slug}</div>
+                    <div className="small muted">{postPath(post)}</div>
                   </td>
+                  <td>{post.kind === "research" ? "Research" : "Blog"}</td>
                   <td>
                     <span className={`badge${post.published ? " badge-live" : ""}`}>
                       {post.published ? "Published" : "Draft"}
@@ -58,7 +62,7 @@ async function Dashboard() {
                   <td className="nowrap">{formatDate(post.published_at ?? post.updated_at)}</td>
                   <td className="row-actions">
                     {post.published && (
-                      <Link href={`/blog/${post.slug}`} target="_blank">
+                      <Link href={postPath(post)} target="_blank">
                         View
                       </Link>
                     )}
@@ -74,6 +78,10 @@ async function Dashboard() {
           </table>
         </div>
       )}
+
+      <p className="small muted storage-note">
+        Uploaded images and PDFs use {formatBytes(storage)} of database storage (Neon&apos;s free plan includes 512 MB in total).
+      </p>
     </>
   );
 }

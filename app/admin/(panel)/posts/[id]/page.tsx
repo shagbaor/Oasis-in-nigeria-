@@ -14,11 +14,16 @@ async function EditPost({ params }: { params: PageProps<"/admin/posts/[id]">["pa
     <PostForm
       post={{
         id: post.id,
+        kind: post.kind,
         title: post.title,
         slug: post.slug,
         excerpt: post.excerpt,
         content: post.content,
         cover_image_url: post.cover_image_url,
+        pdf:
+          post.pdf_file_id && post.pdf_name
+            ? { id: post.pdf_file_id, name: post.pdf_name, size: post.pdf_size ?? 0 }
+            : null,
         published: post.published,
       }}
     />
@@ -28,7 +33,7 @@ async function EditPost({ params }: { params: PageProps<"/admin/posts/[id]">["pa
 export default function EditPostPage({ params }: PageProps<"/admin/posts/[id]">) {
   return (
     <>
-      <h1>Edit post</h1>
+      <h1>Edit</h1>
       <Suspense fallback={<p className="muted">Loading…</p>}>
         <EditPost params={params} />
       </Suspense>
