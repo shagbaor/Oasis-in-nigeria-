@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/session";
-import { getPost, postPath } from "@/lib/posts";
+import { getPost, postPath, postStatus } from "@/lib/posts";
+import { toSiteInputValue } from "@/lib/format";
 import { removePost } from "../../../actions";
 import { ConfirmButton } from "../../ConfirmButton";
 import { PostForm } from "../../PostForm";
@@ -17,11 +18,9 @@ async function EditPost({ params }: { params: PageProps<"/admin/posts/[id]">["pa
     <>
       <div className="admin-title">
         <h1>Edit</h1>
-        {post.published && (
-          <Link href={postPath(post)} target="_blank" className="btn btn-small btn-outline">
-            View live
-          </Link>
-        )}
+        <Link href={postPath(post)} target="_blank" className="btn btn-small btn-outline">
+          {postStatus(post) === "published" ? "View live" : "Preview"}
+        </Link>
       </div>
       <PostForm
         post={{
@@ -36,7 +35,8 @@ async function EditPost({ params }: { params: PageProps<"/admin/posts/[id]">["pa
             post.pdf_file_id && post.pdf_name
               ? { id: post.pdf_file_id, name: post.pdf_name, size: post.pdf_size ?? 0 }
               : null,
-          published: post.published,
+          status: postStatus(post),
+          publish_at: postStatus(post) === "scheduled" ? toSiteInputValue(post.published_at) : "",
         }}
       />
       <section className="danger-zone" aria-labelledby="danger-heading">

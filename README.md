@@ -81,11 +81,17 @@ Sign in at `/admin` and click **New post**. Choose **Blog post** or **Research**
 - **Upload cover image** sets the picture shown at the top and on cards.
 - **Attach PDF** adds a download button at the end of the post (up to 25 MB).
 
-Posts stay as drafts until you tick **Published**.
+Under **Visibility**, choose:
+
+- **Draft** — saved but hidden from the public site.
+- **Publish now** — live as soon as you save. Editing a live post keeps its original date.
+- **Schedule** — pick a date and time (Nigeria time, WAT). The post is saved straight away but stays hidden until then, and appears on the blog or research page, the homepage and in search automatically at that time. Picking a time in the past publishes it immediately with that date (useful for backdating).
+
+Drafts and scheduled posts are hidden from visitors (their links show "not found"). Signed in as admin you can open them with **Preview** to see exactly how they will look, with a banner saying they're not public yet. The dashboard shows each post's status, the scheduled time, and has a **Scheduled** filter.
 
 ### Finding, editing and deleting posts
 
-- The admin dashboard lists every post with **Edit**, **View** and **Delete**. Search by title, summary or text, and filter by type (blog or research) and status (published or draft).
+- The admin dashboard lists every post with **Edit**, **View** and **Delete**. Search by title, summary or text, and filter by type (blog or research) and status (published, scheduled or draft).
 - The edit page has **View live** and a **Delete post** button at the bottom.
 - When you're signed in, every published post on the public site shows an **Edit this post** bar at the top.
 - **Messages** can be searched by name, email, subject or message.

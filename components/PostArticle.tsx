@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { getPublishedPost, type PostKind } from "@/lib/posts";
+import { getPostForPreview, getPublishedPost, postStatus, type PostKind } from "@/lib/posts";
+import { isAdmin } from "@/lib/session";
 import { formatDate } from "@/lib/format";
 import { fileUrl, formatBytes } from "@/lib/uploads";
 import { AdminEditBar } from "./AdminEditBar";
@@ -30,14 +31,17 @@ export async function postMetadata(kind: PostKind, slug: string): Promise<Metada
 }
 
 export async function PostArticle({ kind, slug }: { kind: PostKind; slug: Promise<string> }) {
-  const post = await getPublishedPost(kind, await slug);
+  const postSlug = await slug;
+  // Drafts and scheduled posts are hidden from the public, but admins can preview them.
+  const post = (await getPublishedPost(kind, postSlug)) ?? ((await isAdmin()) ? await getPostForPreview(kind, postSlug) : null);
   if (!post) notFound();
   const section = SECTIONS[kind];
+  const status = postStatus(post);
 
   return (
     <article className="post">
       <Suspense fallback={null}>
-        <AdminEditBar postId={post.id} />
+        <AdminEditBar postId={post.id} status={status} publishAt={post.published_at} />
       </Suspense>
       <header className="page-hero">
         <div className="container container-narrow">

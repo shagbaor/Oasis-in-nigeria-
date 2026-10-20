@@ -8,7 +8,7 @@ import { getFile } from "@/lib/files";
 import { PDF_TYPE } from "@/lib/uploads";
 import { deleteMessage, setMessageRead } from "@/lib/messages";
 import { isUniqueViolation } from "@/lib/db";
-import { slugify } from "@/lib/format";
+import { fromSiteInputValue, slugify } from "@/lib/format";
 
 export type FormState = { error: string } | null;
 
@@ -37,14 +37,29 @@ async function readPostForm(formData: FormData): Promise<PostInput | string> {
   const content = String(formData.get("content") ?? "");
   const cover = String(formData.get("cover_image_url") ?? "").trim();
   const pdfId = String(formData.get("pdf_file_id") ?? "").trim();
-  const published = formData.get("published") === "on";
+  const visibility = String(formData.get("visibility") ?? "draft");
+  const published = visibility === "now" || visibility === "schedule";
+  const publishAt = visibility === "schedule" ? fromSiteInputValue(String(formData.get("publish_at") ?? "")) : null;
 
   if (!title) return "Please add a title.";
   if (!slug) return "Please add a URL slug using letters or numbers.";
-  if (cover && !/^(https?:\/\/|\/files\/)/i.test(cover)) return "The cover image must be an uploaded image or a full http(s) URL.";
-  if (pdfId && (await getFile(pdfId))?.content_type !== PDF_TYPE) return "The attached PDF could not be found. Please upload it again.";
+  if (cover && !/^(https?:\/\/|\/files\/)/i.test(cover))
+    return "The cover image must be an uploaded image or a full http(s) URL.";
+  if (pdfId && (await getFile(pdfId))?.content_type !== PDF_TYPE)
+    return "The attached PDF could not be found. Please upload it again.";
+  if (visibility === "schedule" && !publishAt) return "Please choose the date and time to publish.";
 
-  return { kind, title, slug, excerpt, content, cover_image_url: cover || null, pdf_file_id: pdfId || null, published };
+  return {
+    kind,
+    title,
+    slug,
+    excerpt,
+    content,
+    cover_image_url: cover || null,
+    pdf_file_id: pdfId || null,
+    published,
+    publish_at: publishAt,
+  };
 }
 
 export async function savePost(_prev: FormState, formData: FormData): Promise<FormState> {

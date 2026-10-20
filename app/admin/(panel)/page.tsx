@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { requireAdmin } from "@/lib/session";
-import { listAllPosts, postPath, type PostFilters } from "@/lib/posts";
+import { listAllPosts, postPath, postStatus, type PostFilters } from "@/lib/posts";
 import { storageUsed } from "@/lib/files";
 import { formatBytes } from "@/lib/uploads";
 import { countUnreadMessages } from "@/lib/messages";
-import { formatDate } from "@/lib/format";
+import { formatDate, formatDateTime } from "@/lib/format";
 import { SearchBox } from "@/components/SearchBox";
 import { Highlight } from "@/components/Highlight";
 import { removePost } from "../actions";
@@ -21,7 +21,7 @@ function readFilters(params: Awaited<SearchParams>): Required<Pick<PostFilters, 
   return {
     q: first(params.q).trim().slice(0, 100),
     kind: kind === "blog" || kind === "research" ? kind : undefined,
-    status: status === "published" || status === "draft" ? status : undefined,
+    status: status === "published" || status === "scheduled" || status === "draft" ? status : undefined,
   };
 }
 
@@ -36,8 +36,25 @@ function filterHref(filters: PostFilters, change: Record<string, string | undefi
 
 function FilterChips({ filters }: { filters: PostFilters }) {
   const groups = [
-    { key: "type", current: filters.kind, options: [["", "All"], ["blog", "Blog"], ["research", "Research"]] },
-    { key: "status", current: filters.status, options: [["", "Any status"], ["published", "Published"], ["draft", "Drafts"]] },
+    {
+      key: "type",
+      current: filters.kind,
+      options: [
+        ["", "All"],
+        ["blog", "Blog"],
+        ["research", "Research"],
+      ],
+    },
+    {
+      key: "status",
+      current: filters.status,
+      options: [
+        ["", "Any status"],
+        ["published", "Published"],
+        ["scheduled", "Scheduled"],
+        ["draft", "Drafts"],
+      ],
+    },
   ];
   return (
     <div className="filter-chips">
@@ -73,7 +90,11 @@ async function Dashboard({ searchParams }: { searchParams: SearchParams }) {
     <>
       {unread > 0 && (
         <p className="admin-notice">
-          You have <Link href="/admin/messages">{unread} unread message{unread === 1 ? "" : "s"}</Link>.
+          You have{" "}
+          <Link href="/admin/messages">
+            {unread} unread message{unread === 1 ? "" : "s"}
+          </Link>
+          .
         </p>
       )}
 
@@ -90,7 +111,9 @@ async function Dashboard({ searchParams }: { searchParams: SearchParams }) {
       )}
 
       {posts.length === 0 ? (
-        <p className="muted">{filtering ? "No posts match. Try different words or filters." : "No posts yet. Write your first one!"}</p>
+        <p className="muted">
+          {filtering ? "No posts match. Try different words or filters." : "No posts yet. Write your first one!"}
+        </p>
       ) : (
         <div className="table-wrap">
           <table className="admin-table">
@@ -106,41 +129,50 @@ async function Dashboard({ searchParams }: { searchParams: SearchParams }) {
               </tr>
             </thead>
             <tbody>
-              {posts.map((post) => (
-                <tr key={post.id}>
-                  <td className="cell-title">
-                    <Link href={`/admin/posts/${post.id}`} className="admin-post-title">
-                      {filters.q ? <Highlight text={post.title} query={filters.q} /> : post.title}
-                    </Link>
-                    <div className="small muted">{postPath(post)}</div>
-                  </td>
-                  <td data-label="Type">{post.kind === "research" ? "Research" : "Blog"}</td>
-                  <td data-label="Status">
-                    <span className={`badge${post.published ? " badge-live" : ""}`}>
-                      {post.published ? "Published" : "Draft"}
-                    </span>
-                  </td>
-                  <td data-label="Date" className="nowrap">
-                    {formatDate(post.published_at ?? post.updated_at)}
-                  </td>
-                  <td className="cell-actions">
-                    <div className="row-actions">
-                      <Link href={`/admin/posts/${post.id}`} className="action-btn">
-                        Edit
+              {posts.map((post) => {
+                const status = postStatus(post);
+                return (
+                  <tr key={post.id}>
+                    <td className="cell-title">
+                      <Link href={`/admin/posts/${post.id}`} className="admin-post-title">
+                        {filters.q ? <Highlight text={post.title} query={filters.q} /> : post.title}
                       </Link>
-                      {post.published && (
-                        <Link href={postPath(post)} target="_blank" className="action-btn">
-                          View
-                        </Link>
+                      <div className="small muted">{postPath(post)}</div>
+                    </td>
+                    <td data-label="Type">{post.kind === "research" ? "Research" : "Blog"}</td>
+                    <td data-label="Status">
+                      <span className={`badge badge-${status}`}>
+                        {status === "published" ? "Published" : status === "scheduled" ? "Scheduled" : "Draft"}
+                      </span>
+                    </td>
+                    <td data-label="Date" className="nowrap">
+                      {status === "scheduled" ? (
+                        <span title="Goes live automatically at this time (Nigeria time)">
+                          {formatDateTime(post.published_at)} WAT
+                        </span>
+                      ) : (
+                        formatDate(post.published_at ?? post.updated_at)
                       )}
-                      <form action={removePost}>
-                        <input type="hidden" name="id" value={post.id} />
-                        <ConfirmButton message={`Delete "${post.title}"? This cannot be undone.`}>Delete</ConfirmButton>
-                      </form>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="cell-actions">
+                      <div className="row-actions">
+                        <Link href={`/admin/posts/${post.id}`} className="action-btn">
+                          Edit
+                        </Link>
+                        <Link href={postPath(post)} target="_blank" className="action-btn">
+                          {status === "published" ? "View" : "Preview"}
+                        </Link>
+                        <form action={removePost}>
+                          <input type="hidden" name="id" value={post.id} />
+                          <ConfirmButton message={`Delete "${post.title}"? This cannot be undone.`}>
+                            Delete
+                          </ConfirmButton>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

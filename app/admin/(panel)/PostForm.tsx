@@ -5,6 +5,7 @@ import Link from "next/link";
 import { savePost, type FormState } from "../actions";
 import { uploadFile } from "./upload";
 import { IMAGE_TYPES, PDF_TYPE, fileUrl, formatBytes } from "@/lib/uploads";
+import { formatDateTime, fromSiteInputValue } from "@/lib/format";
 
 type PostFields = {
   id?: number;
@@ -15,8 +16,18 @@ type PostFields = {
   content: string;
   cover_image_url: string | null;
   pdf: { id: string; name: string; size: number } | null;
-  published: boolean;
+  status: "draft" | "scheduled" | "published";
+  // Scheduled time in Nigeria time, as "YYYY-MM-DDTHH:mm" (empty if none).
+  publish_at: string;
 };
+
+type Visibility = "draft" | "now" | "schedule";
+const VISIBILITY_FOR_STATUS: Record<PostFields["status"], Visibility> = {
+  draft: "draft",
+  published: "now",
+  scheduled: "schedule",
+};
+const SAVE_LABELS: Record<Visibility, string> = { draft: "Save draft", now: "Publish", schedule: "Schedule" };
 
 const EMPTY: PostFields = {
   kind: "blog",
@@ -26,7 +37,8 @@ const EMPTY: PostFields = {
   content: "",
   cover_image_url: null,
   pdf: null,
-  published: false,
+  status: "draft",
+  publish_at: "",
 };
 
 const IMAGE_ACCEPT = IMAGE_TYPES.join(",");
@@ -38,6 +50,9 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
   const [uploading, setUploading] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
+  const [visibility, setVisibility] = useState<Visibility>(VISIBILITY_FOR_STATUS[post.status]);
+  const [publishAt, setPublishAt] = useState(post.publish_at);
+  const scheduledDate = visibility === "schedule" ? fromSiteInputValue(publishAt) : null;
 
   // Submitting via onSubmit (not the action prop) stops React clearing the form when saving fails.
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -50,9 +65,7 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
     setUploadError(null);
     setUploading(`Uploading ${label}…`);
     try {
-      return await uploadFile(file, (fraction) =>
-        setUploading(`Uploading ${label}… ${Math.round(fraction * 100)}%`)
-      );
+      return await uploadFile(file, (fraction) => setUploading(`Uploading ${label}… ${Math.round(fraction * 100)}%`));
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed. Please try again.");
       return null;
@@ -66,11 +79,19 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
     for (const [i, file] of files.entries()) {
       const uploaded = await upload(file, files.length > 1 ? `image ${i + 1} of ${files.length}` : "image");
       if (!uploaded || !textarea) continue;
-      const alt = file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").replace(/[[\]]/g, "");
+      const alt = file.name
+        .replace(/\.[^.]+$/, "")
+        .replace(/[-_]+/g, " ")
+        .replace(/[[\]]/g, "");
       const before = textarea.value.slice(0, textarea.selectionStart);
       const gap = before === "" || before.endsWith("\n\n") ? "" : before.endsWith("\n") ? "\n" : "\n\n";
       textarea.focus();
-      textarea.setRangeText(`${gap}![${alt}](${uploaded.url})\n\n`, textarea.selectionStart, textarea.selectionEnd, "end");
+      textarea.setRangeText(
+        `${gap}![${alt}](${uploaded.url})\n\n`,
+        textarea.selectionStart,
+        textarea.selectionEnd,
+        "end",
+      );
     }
   }
 
@@ -90,7 +111,12 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
       </label>
       <label>
         URL slug
-        <input name="slug" defaultValue={post.slug} placeholder="Leave blank to generate from the title" maxLength={80} />
+        <input
+          name="slug"
+          defaultValue={post.slug}
+          placeholder="Leave blank to generate from the title"
+          maxLength={80}
+        />
         <span className="hint">The address of the page, e.g. /blog/your-slug or /research/your-slug</span>
       </label>
       <label>
@@ -178,10 +204,51 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
         </p>
       )}
 
-      <label className="checkbox">
-        <input type="checkbox" name="published" defaultChecked={post.published} />
-        Published (visible on the public site)
-      </label>
+      <fieldset className="visibility">
+        <legend className="field-label">Visibility</legend>
+        <div className="visibility-options">
+          {(
+            [
+              ["draft", "Draft", "Hidden from the public site."],
+              ["now", "Publish now", post.status === "published" ? "Live on the site." : "Goes live when you save."],
+              ["schedule", "Schedule", "Saved now, goes live automatically at the time you choose."],
+            ] as const
+          ).map(([value, label, hint]) => (
+            <label key={value} className={`visibility-option${visibility === value ? " is-selected" : ""}`}>
+              <input
+                type="radio"
+                name="visibility"
+                value={value}
+                checked={visibility === value}
+                onChange={() => setVisibility(value)}
+              />
+              <span>
+                <strong>{label}</strong>
+                <span className="hint">{hint}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+        {visibility === "schedule" && (
+          <label className="schedule-time">
+            Publish on (Nigeria time, WAT)
+            <input
+              type="datetime-local"
+              name="publish_at"
+              value={publishAt}
+              onChange={(event) => setPublishAt(event.target.value)}
+              required
+            />
+            <span className="hint">
+              {scheduledDate
+                ? scheduledDate > new Date()
+                  ? `Goes live ${formatDateTime(scheduledDate)} WAT. Until then only admins can see it.`
+                  : `That time has passed, so the post goes live when you save, dated ${formatDateTime(scheduledDate)}.`
+                : "Choose a date and time."}
+            </span>
+          </label>
+        )}
+      </fieldset>
       {state?.error && (
         <p className="form-status error" role="alert">
           {state.error}
@@ -189,7 +256,7 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
       )}
       <div className="form-actions">
         <button type="submit" className="btn" disabled={pending || !!uploading}>
-          {pending ? "Saving…" : "Save"}
+          {pending ? "Saving…" : SAVE_LABELS[visibility]}
         </button>
         <Link href="/admin">Cancel</Link>
       </div>
