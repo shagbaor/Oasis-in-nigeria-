@@ -24,5 +24,6 @@ export const CONTACT_SUBJECTS = [
   "Partnership",
   "Funding",
   "Research collaboration",
+  "Donation",
   "Media",
 ] as const;

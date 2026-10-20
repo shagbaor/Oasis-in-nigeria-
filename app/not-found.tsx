@@ -1,6 +1,7 @@
 import { NotFoundContent } from "@/components/NotFoundContent";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { ScrollEffects } from "@/components/ScrollEffects";
 
 // Unmatched URLs render outside the (site) layout, so add the site chrome here.
 export default function NotFound() {
@@ -11,6 +12,7 @@ export default function NotFound() {
         <NotFoundContent />
       </main>
       <SiteFooter />
+      <ScrollEffects />
     </>
   );
 }

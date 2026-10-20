@@ -216,3 +216,6 @@ export const WAYS_TO_WORK = [
 export function contactHref(subject?: string) {
   return subject ? `/contact?subject=${encodeURIComponent(subject)}` : "/contact";
 }
+
+export const CONTACT_EMAIL = "talktous@oasisinnigeria.org";
+export const INSTAGRAM = { handle: "@oasis.in.nigeria", url: "https://www.instagram.com/oasis.in.nigeria/" };

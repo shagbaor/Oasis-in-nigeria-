@@ -8,7 +8,9 @@ Built with [Next.js](https://nextjs.org) (React) and a [Neon](https://neon.tech)
 - `/about` — the name, motto, political philosophy and principles
 - `/our-work` — thematic focus, the five objectives, OASIS Safe Ground
 - `/work-with-us` — partnership, funding and research collaboration
-- `/contact` — contact form (messages are saved to the database); `/contact?subject=Funding` preselects a subject
+- `/contact` — contact form: each message is emailed to talktous@oasisinnigeria.org and saved in the admin; `/contact?subject=Funding` preselects a subject
+- `/donate` — what donations support and how to give
+- `/policies` — privacy, cookies, safeguarding, and stories and consent
 - `/blog` — public blog
 - `/research` — research articles, each with an optional downloadable PDF
 - `/admin` — password-protected admin for writing blog posts and research, uploading images and PDFs, and reading messages
@@ -57,6 +59,20 @@ Server code runs in Frankfurt (`fra1`, set in `vercel.json`) to sit next to the 
 
 Tip: Vercel's Neon integration (Storage → Create Database → Neon) can create the database and set `DATABASE_URL` for you.
 
+## Contact form email
+
+The contact form emails every message to `talktous@oasisinnigeria.org` through [Resend](https://resend.com) and also saves it under **Messages** in the admin, so nothing is lost if email is down.
+
+1. Create a Resend account and add the domain `oasisinnigeria.org` (Resend → Domains). Add the DNS records it shows at your domain registrar and wait for it to verify.
+2. Create an API key (Resend → API Keys).
+3. In Vercel, add `RESEND_API_KEY` and `CONTACT_FROM_EMAIL` (for example `OASIS website <website@oasisinnigeria.org>`), then redeploy.
+
+Replying to a message email replies straight to the person who sent it. Without these variables, messages are still saved in the admin.
+
+## Donations
+
+Edit `lib/donate.ts` to add an online giving link (for example a Paystack or Flutterwave payment page) or bank transfer details. The Donate page shows them automatically; until then it asks people to get in touch.
+
 ## Writing blog posts and research
 
 Sign in at `/admin` and click **New post**. Choose **Blog post** or **Research**, then write in Markdown.
@@ -77,7 +93,8 @@ The design and wording follow the *OASIS Founding Identity* (October 2026) and t
 
 - **Wording** — vision, mission, objectives, philosophy, principles and proverbs live in `lib/identity.ts`. Edit them there; the pages read from that file.
 - **Colours** — defined once at the top of `app/globals.css`. Text follows the palette's contrast table: Terracotta text only at 24px and above, never on Forest Green; buttons are Forest Green with white text.
-- **Type** — TeX Gyre Pagella, as in the identity document, self-hosted from `app/fonts/` (GUST Font License, see `app/fonts/LICENSE-TeX-Gyre.txt`). Noto Serif fills in the Hausa letters ɗ and ƙ that Pagella lacks.
+- **Type** — Palatino Linotype. Devices that have it (Windows, macOS) use it; others download TeX Gyre Pagella, a free Palatino design, from `public/fonts/` (GUST Font License, see `public/fonts/LICENSE-TeX-Gyre.txt`). Noto Serif fills in the Hausa letters ɗ and ƙ.
+- **Motion** — smooth scrolling (Lenis) and scroll-in animations live in `components/ScrollEffects.tsx`. Both switch off for visitors who prefer reduced motion.
 - **Pattern and border** — `public/patterns/tile.svg` (circles, waves, dots, leaf) and `public/patterns/band.svg` (triangle border) recreate the identity artwork.
 
 The logos in `public/` (`oasis-logo.svg`, `oasis-logo-reversed.svg` for dark backgrounds) and the favicon (`app/icon.svg`) are vector versions traced from the official artwork and filled with the exact palette colours. If you have the original vector logo files, drop them in to replace these.

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ContactForm } from "@/components/ContactForm";
 import { Label } from "@/components/Brand";
+import { CONTACT_EMAIL, INSTAGRAM } from "@/lib/identity";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -36,7 +37,13 @@ export default function ContactPage() {
             <ul className="contact-list">
               <li>
                 <span>Email</span>
-                <a href="mailto:hello@oasis.org">hello@oasis.org</a>
+                <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+              </li>
+              <li>
+                <span>Instagram</span>
+                <a href={INSTAGRAM.url} target="_blank" rel="noopener noreferrer">
+                  {INSTAGRAM.handle}
+                </a>
               </li>
               <li>
                 <span>Location</span>Nigeria

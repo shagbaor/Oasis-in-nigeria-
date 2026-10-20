@@ -1,19 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import localFont from "next/font/local";
 import { Noto_Serif } from "next/font/google";
 import "./globals.css";
 
-// TeX Gyre Pagella, the typeface of the OASIS Founding Identity (GUST Font License).
-const pagella = localFont({
-  variable: "--font-pagella",
-  display: "swap",
-  src: [
-    { path: "./fonts/pagella-regular.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/pagella-italic.woff2", weight: "400", style: "italic" },
-    { path: "./fonts/pagella-bold.woff2", weight: "700", style: "normal" },
-    { path: "./fonts/pagella-bolditalic.woff2", weight: "700", style: "italic" },
-  ],
-});
+// The brand font is Palatino Linotype. It is declared in globals.css: devices
+// that have it installed use it, others download the matching TeX Gyre Pagella.
 
 // Fallback for Hausa letters Pagella lacks (ɗ, ƙ), as in the identity document.
 // Not preloaded: browsers only fetch it when a page uses those characters.
@@ -46,7 +36,7 @@ export const viewport: Viewport = { themeColor: "#22493c" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-NG" className={`${pagella.variable} ${notoSerif.variable}`}>
+    <html lang="en-NG" className={notoSerif.variable}>
       <body>{children}</body>
     </html>
   );
