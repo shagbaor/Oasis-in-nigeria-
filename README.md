@@ -65,6 +65,12 @@ Posts stay as drafts until you tick **Published**.
 
 Images and PDFs are stored in the Neon database, split into 2 MB chunks so each upload stays under Vercel's request size limit. Files are served from `/files/<id>/<name>` and cached by the browser and Vercel's CDN. When a post is deleted, or an image or PDF is removed from it, the file is deleted too. The admin dashboard shows how much storage files use (Neon's free plan includes 512 MB in total).
 
+## Brand
+
+Colours come from the *OASIS Official Colour Palette* (October 2026) and are defined once at the top of `app/globals.css`. Text colours follow the palette's contrast table: Terracotta is used for decoration and large headings only, and buttons are Forest Green with white text.
+
+The logos in `public/` (`oasis-logo.svg`, `oasis-logo-reversed.svg` for dark backgrounds) and the favicon (`app/icon.svg`) are vector versions traced from the official artwork and filled with the exact palette colours. If you have the original vector logo files, drop them in to replace these.
+
 ## Project layout
 
 ```

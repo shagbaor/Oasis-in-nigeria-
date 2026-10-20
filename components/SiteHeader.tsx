@@ -19,9 +19,8 @@ export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="container nav">
-        <Link href="/" className="brand" aria-label="OASIS home" onClick={close}>
-          <Image src="/logo.svg" alt="" width={36} height={36} />
-          <span>OASIS</span>
+        <Link href="/" className="brand" onClick={close}>
+          <Image src="/oasis-logo.svg" alt="OASIS home" width={98} height={40} priority />
         </Link>
         <button
           className="nav-toggle"

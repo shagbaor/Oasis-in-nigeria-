@@ -12,10 +12,10 @@ export function SiteFooter() {
   return (
     <footer className="site-footer">
       <div className="container footer-inner">
-        <div className="brand">
-          <Image src="/logo.svg" alt="" width={32} height={32} />
-          <span>OASIS</span>
-        </div>
+        <Image src="/oasis-logo-reversed.svg" alt="OASIS" width={128} height={52} className="footer-logo" />
+        <p className="tagline">
+          Safety. Dignity. <em>Recovery.</em>
+        </p>
         <p>Outreach for Affirming Spaces, Inclusion and Sustainability</p>
         <nav className="footer-links" aria-label="Footer">
           <Link href="/#about">About</Link>

@@ -9,8 +9,8 @@ export default function LoginPage() {
     <main className="admin-login">
       <div className="admin-login-card">
         <div className="brand">
-          <Image src="/logo.svg" alt="" width={36} height={36} />
-          <span>OASIS Admin</span>
+          <Image src="/oasis-logo.svg" alt="OASIS" width={98} height={40} />
+          <span>Admin</span>
         </div>
         <LoginForm />
       </div>

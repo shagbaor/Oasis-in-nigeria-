@@ -104,7 +104,7 @@ export default function HomePage() {
             communities that can thrive for generations.
           </p>
           <div className="hero-actions">
-            <a href="#involved" className="btn">
+            <a href="#involved" className="btn btn-light">
               Get Involved
             </a>
             <a href="#about" className="btn btn-ghost">
@@ -113,7 +113,8 @@ export default function HomePage() {
           </div>
         </div>
         <svg className="hero-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0,64 C240,120 480,0 720,48 C960,96 1200,24 1440,64 L1440,120 L0,120 Z" />
+          <path className="wave-accent" d="M0,52 C240,108 480,-12 720,36 C960,84 1200,12 1440,52 L1440,120 L0,120 Z" />
+          <path className="wave-base" d="M0,72 C240,128 480,8 720,56 C960,104 1200,32 1440,72 L1440,120 L0,120 Z" />
         </svg>
       </section>
 

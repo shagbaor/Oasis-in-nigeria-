@@ -60,17 +60,19 @@ async function Dashboard() {
                     </span>
                   </td>
                   <td className="nowrap">{formatDate(post.published_at ?? post.updated_at)}</td>
-                  <td className="row-actions">
-                    {post.published && (
-                      <Link href={postPath(post)} target="_blank">
-                        View
-                      </Link>
-                    )}
-                    <Link href={`/admin/posts/${post.id}`}>Edit</Link>
-                    <form action={removePost}>
-                      <input type="hidden" name="id" value={post.id} />
-                      <ConfirmButton message={`Delete "${post.title}"? This cannot be undone.`}>Delete</ConfirmButton>
-                    </form>
+                  <td>
+                    <div className="row-actions">
+                      {post.published && (
+                        <Link href={postPath(post)} target="_blank">
+                          View
+                        </Link>
+                      )}
+                      <Link href={`/admin/posts/${post.id}`}>Edit</Link>
+                      <form action={removePost}>
+                        <input type="hidden" name="id" value={post.id} />
+                        <ConfirmButton message={`Delete "${post.title}"? This cannot be undone.`}>Delete</ConfirmButton>
+                      </form>
+                    </div>
                   </td>
                 </tr>
               ))}

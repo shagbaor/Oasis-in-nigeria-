@@ -11,8 +11,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <header className="admin-header">
         <div className="container admin-nav">
           <Link href="/admin" className="brand">
-            <Image src="/logo.svg" alt="" width={30} height={30} />
-            <span>OASIS Admin</span>
+            <Image src="/oasis-logo.svg" alt="OASIS" width={78} height={32} />
+            <span>Admin</span>
           </Link>
           <nav aria-label="Admin">
             <Link href="/admin">Posts</Link>
