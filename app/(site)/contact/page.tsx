@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Suspense } from "react";
 import { ContactForm } from "@/components/ContactForm";
 import { Label } from "@/components/Brand";
-import { CONTACT_EMAIL, INSTAGRAM } from "@/lib/identity";
+import { ADDRESS_LINES, CONTACT_EMAIL, INSTAGRAM } from "@/lib/identity";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
-  description: "Contact OASIS for support, partnership, funding or research collaboration. Every enquiry is treated confidentially.",
-};
+  path: "/contact",
+  description:
+    "Contact OASIS in Uyo, Akwa Ibom State, Nigeria, for support, partnership, funding or research. Email talktous@oasisinnigeria.org. Every enquiry is confidential.",
+});
 
 export default function ContactPage() {
   return (
@@ -46,7 +49,12 @@ export default function ContactPage() {
                 </a>
               </li>
               <li>
-                <span>Location</span>Nigeria
+                <span>Address</span>
+                <address className="contact-address">
+                  {ADDRESS_LINES.map((line) => (
+                    <span key={line}>{line}</span>
+                  ))}
+                </address>
               </li>
             </ul>
           </div>

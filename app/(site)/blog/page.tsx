@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { PostIndex } from "@/components/PostIndex";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Blog",
-  description: "Stories, news and updates from OASIS.",
-};
+  path: "/blog",
+  description:
+    "News and stories from OASIS on climate displacement, mental wellbeing and recovery for marginalised communities in Nigeria.",
+});
 
 export default function BlogPage({ searchParams }: PageProps<"/blog">) {
   return (

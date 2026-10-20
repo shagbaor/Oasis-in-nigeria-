@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Band, Label, ProverbBox } from "@/components/Brand";
 import { FOCUS, PRINCIPLES, PROVERBS, WAYS_TO_WORK, contactHref } from "@/lib/identity";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Work with us",
+  path: "/work-with-us",
   description:
-    "Partner, fund or collaborate with OASIS on safety, dignity and recovery for people affected by climate displacement in Nigeria.",
-};
+    "Partner, fund or collaborate with OASIS to support people affected by climate-related displacement in Nigeria. Community, healthcare and housing partners welcome.",
+});
 
 const WHERE_WE_BEGIN = FOCUS.find((row) => row.label === "Where we begin")!;
 

@@ -916,3 +916,11 @@ mark { background: var(--pale-terracotta); color: var(--forest); padding: 0 2px;
   .footer-contact li { position: relative; }
   .footer-contact li a::after { content: ""; position: absolute; inset: 0; border-radius: 12px; }
 }
+
+/* Address */
+.contact-address, .footer-address { font-style: normal; }
+.contact-address { display: grid; gap: 2px; }
+.contact-address span { width: auto !important; font-weight: 400 !important; color: inherit !important; }
+.footer-contact li:has(.footer-address) { align-items: flex-start; }
+.footer-contact li:has(.footer-address) svg { margin-top: 3px; }
+.aim { font-size: clamp(1.05rem, 1.6vw, 1.22rem); line-height: 1.5; color: var(--forest) !important; max-width: 760px; }

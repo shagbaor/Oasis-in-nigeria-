@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Image from "next/image";
 import { Band, Label, Motto, PatternPanel, ProverbBox } from "@/components/Brand";
 import {
-  FULL_NAME,
   INTELLECTUAL_GROUNDING,
   LETTERS,
   PHILOSOPHY,
@@ -11,10 +11,12 @@ import {
   PURPOSE_LONG,
 } from "@/lib/identity";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "About",
-  description: `${FULL_NAME}: our name, our motto, and the decolonial, intersectional feminist philosophy behind our work.`,
-};
+  path: "/about",
+  description:
+    "About OASIS (Outreach for Affirming Spaces, Inclusion and Sustainability): our name, our motto Safety. Dignity. Recovery., and the values behind our work in Nigeria.",
+});
 
 export default function AboutPage() {
   return (

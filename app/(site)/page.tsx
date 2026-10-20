@@ -1,10 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 import { Suspense } from "react";
 import { connection } from "next/server";
 import { PostCard } from "@/components/PostCard";
 import { Band, Label, PatternPanel, ProverbBox } from "@/components/Brand";
 import { listPublishedPosts, type PostKind } from "@/lib/posts";
-import { FULL_NAME, MISSION, MISSION_AREAS, OBJECTIVES, PROVERBS, PURPOSE, VISION, WAYS_TO_WORK, contactHref } from "@/lib/identity";
+import { AIM, FULL_NAME, MISSION, MISSION_AREAS, OBJECTIVES, PROVERBS, PURPOSE, VISION, WAYS_TO_WORK, contactHref } from "@/lib/identity";
+
+export const metadata: Metadata = pageMetadata({
+  path: "/",
+  description:
+    "OASIS is a Nigerian non-profit helping marginalised people affected by climate-related displacement stay safe, recover their mental wellbeing and rebuild their lives.",
+});
 
 async function LatestPosts({ kind }: { kind: PostKind }) {
   await connection();
@@ -96,8 +104,8 @@ export default function HomePage() {
           <div className="section-head section-head-row">
             <div>
               <Label>Core objectives</Label>
-              <h2>Five connected objectives</h2>
-              <p>They guide our programmes, partnerships and accountability, and each one links back to our mission.</p>
+              <h2>Five core objectives</h2>
+              <p>{AIM}</p>
             </div>
             <Link href="/our-work" className="link-arrow">
               How we work

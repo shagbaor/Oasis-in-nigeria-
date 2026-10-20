@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Band, Label, PatternPanel, ProverbBox } from "@/components/Brand";
-import { FOCUS, GUIDING_PRINCIPLE, MISSION, MISSION_AREAS, OBJECTIVES, PROVERBS, VISION } from "@/lib/identity";
+import { AIM, FOCUS, GUIDING_PRINCIPLE, MISSION, MISSION_AREAS, OBJECTIVES, PROVERBS, VISION } from "@/lib/identity";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Our work",
+  path: "/our-work",
   description:
-    "Inclusive climate adaptation and mental-health recovery in Nigeria: our thematic focus and five connected objectives.",
-};
+    "How OASIS helps people displaced by floods, drought and other climate disruption in Nigeria: mental wellbeing, safer housing, healthcare and livelihoods.",
+});
 
 export default function OurWorkPage() {
   return (
@@ -54,9 +56,9 @@ export default function OurWorkPage() {
       <section className="section section-white" id="objectives">
         <div className="container">
           <div className="section-head">
-            <Label>Core objectives</Label>
-            <h2>Five connected objectives</h2>
-            <p>They guide our programmes, partnerships and accountability, and each one links back to our mission.</p>
+            <Label>Our aim and objectives</Label>
+            <h2>Five core objectives</h2>
+            <p className="aim">{AIM}</p>
           </div>
           <table className="id-table objectives-table">
             <thead>

@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Label } from "@/components/Brand";
 import { CONTACT_EMAIL } from "@/lib/identity";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Policies",
-  description: "How OASIS handles your information, keeps people safe and uses stories and images.",
-};
+  path: "/policies",
+  description:
+    "OASIS privacy, cookies, safeguarding and consent policies: how we protect people's information, confidentiality and dignity.",
+});
 
 const LAST_UPDATED = "20 October 2026";
 

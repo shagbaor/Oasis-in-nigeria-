@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Band, Label, ProverbBox } from "@/components/Brand";
 import { BANK_TRANSFER, ONLINE_GIVING_URL } from "@/lib/donate";
-import { CONTACT_EMAIL, OBJECTIVES, PROVERBS, contactHref } from "@/lib/identity";
+import { AIM, CONTACT_EMAIL, OBJECTIVES, PROVERBS, contactHref } from "@/lib/identity";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Donate",
+  path: "/donate",
   description:
-    "Support safety, dignity and recovery for people affected by climate-related displacement in Nigeria.",
-};
+    "Donate to OASIS to help marginalised people in Nigeria affected by climate-related displacement stay safe, recover their mental wellbeing and rebuild their lives.",
+});
 
 const STANDARDS = [
   {
@@ -47,8 +49,8 @@ export default function DonatePage() {
         <div className="container">
           <div className="section-head">
             <Label>What your gift supports</Label>
-            <h2>Five connected objectives</h2>
-            <p>Donations fund the work behind each of our objectives.</p>
+            <h2>Five core objectives</h2>
+            <p>{AIM} Donations fund the work behind each of our objectives.</p>
           </div>
           <ol className="objective-cards">
             {OBJECTIVES.map((objective, i) => (

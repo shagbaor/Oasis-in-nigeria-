@@ -15,6 +15,8 @@ Built with [Next.js](https://nextjs.org) (React) and a [Neon](https://neon.tech)
 - `/research` — research articles, each with an optional downloadable PDF
 - `/admin` — password-protected admin for writing blog posts and research, uploading images and PDFs, and reading messages
 
+Live at **https://www.oasisinnigeria.org**. OASIS is based at No. 5 Covenant Avenue, Shelter Afrique, Uyo, Uyo LGA, Akwa Ibom State, Nigeria.
+
 ## Setup
 
 ### 1. Create the database
@@ -104,13 +106,23 @@ Drafts and scheduled posts are hidden from visitors (their links show "not found
 
 Images and PDFs are stored in the Neon database, split into 2 MB chunks so each upload stays under Vercel's request size limit. Files are served from `/files/<id>/<name>` and cached by the browser and Vercel's CDN. When a post is deleted, or an image or PDF is removed from it, the file is deleted too. The admin dashboard shows how much storage files use; check the Neon console for your plan's limit.
 
+## Search engines and link previews
+
+- **Descriptions and titles** — every page sets its own title, description and canonical address with `pageMetadata()` from `lib/seo.ts`. A post's description is its excerpt, or the start of its text if there is no excerpt.
+- **Link preview picture** — `app/opengraph-image.tsx` draws the picture shown when a link is shared on WhatsApp, Facebook, LinkedIn, X and so on. Posts with a cover image use the cover instead.
+- **Structured data** — `components/StructuredData.tsx` tells Google that OASIS is a non-profit, with its logo (`public/oasis-logo.png`), address, email and Instagram. Research posts are marked as reports and blog posts as articles.
+- **Sitemap and robots** — `/sitemap.xml` lists every page and live post, and updates itself when a scheduled post goes live. `/robots.txt` keeps the admin out of search results.
+- **Address and domain** — `ADDRESS`, `CONTACT_EMAIL` and `SITE_URL` are in `lib/identity.ts`.
+
+To get the site into Google faster, add `www.oasisinnigeria.org` in [Google Search Console](https://search.google.com/search-console) and submit `https://www.oasisinnigeria.org/sitemap.xml`. Do the same in [Bing Webmaster Tools](https://www.bing.com/webmasters) if you like.
+
 ## Brand
 
 The design and wording follow the *OASIS Founding Identity* (October 2026) and the *OASIS Official Colour Palette*.
 
-- **Wording** — vision, mission, objectives, philosophy, principles and proverbs live in `lib/identity.ts`. Edit them there; the pages read from that file.
+- **Wording** — aim, vision, mission, objectives, philosophy, principles and proverbs live in `lib/identity.ts`. Edit them there; the pages read from that file.
 - **Colours** — defined once at the top of `app/globals.css`. Text follows the palette's contrast table: Terracotta text only at 24px and above, never on Forest Green; buttons are Forest Green with white text.
-- **Type** — Palatino Linotype. Devices that have it (Windows, macOS) use it; others download TeX Gyre Pagella, a free Palatino design, from `public/fonts/` (GUST Font License, see `public/fonts/LICENSE-TeX-Gyre.txt`). Noto Serif fills in the Hausa letters ɗ and ƙ.
+- **Type** — Palatino Linotype. Devices that have it (Windows, macOS) use it; others download TeX Gyre Pagella, a free Palatino design, from `public/fonts/` (GUST Font License, see `public/fonts/LICENSE-TeX-Gyre.txt`); the link preview picture uses a cut-down copy in `assets/og-fonts/`. Noto Serif fills in the Hausa letters ɗ and ƙ.
 - **Motion** — smooth scrolling (Lenis), scroll-in reveals, parallax and the progress bar live in `components/ScrollEffects.tsx`; page transitions use React's `<ViewTransition>` in `app/(site)/template.tsx`; keyframes are in the Motion section of `app/globals.css`. All of it switches off for visitors who prefer reduced motion.
 - **Glass tiles** — the translucent cards and proverbs on dark sections use a frosted-glass style (Glass tiles section of `app/globals.css`), with a solid fallback for browsers without blur and for visitors who prefer reduced transparency.
 - **Pattern and border** — `public/patterns/tile.svg` (circles, waves, dots, leaf) and `public/patterns/band.svg` (triangle border) recreate the identity artwork.

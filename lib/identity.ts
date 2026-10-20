@@ -36,33 +36,39 @@ export const LETTERS = [
   { letter: "S", word: "Sustainability", meaning: "Recovery pathways that extend beyond the immediate crisis." },
 ];
 
+// Overall aim and five core objectives (Aim and Objectives, October 2026).
+export const AIM =
+  "Our overall aim is to help marginalised people in Nigeria who are affected by climate-related displacement stay safe, recover their mental wellbeing and rebuild their lives.";
+
 export const OBJECTIVES = [
   {
-    title: "Restore mental wellbeing",
+    title: "Improve mental wellbeing",
     detail:
-      "Provide trauma-informed, supervised psychosocial support and qualified referrals that strengthen wellbeing and daily functioning.",
+      "Help people recover from trauma and distress through confidential emotional support and referrals to qualified professionals.",
     area: "Psychosocial support",
   },
   {
-    title: "Increase housing stability",
-    detail: "Support safe accommodation, tenancy navigation and voluntary moves to safer, affordable housing.",
+    title: "Help people find and keep safer housing",
+    detail:
+      "Support access to safe, affordable accommodation, help people navigate renting, and assist with voluntary moves to safer places.",
     area: "Safer housing",
   },
   {
-    title: "Maintain essential care",
+    title: "Keep essential healthcare accessible",
     detail:
-      "Connect people to confidential healthcare through qualified partners, including substance-use, sexual and reproductive, and specialist care.",
+      "Connect people with confidential healthcare, including support for substance use, sexual and reproductive health, and specialist needs.",
     area: "Essential healthcare",
   },
   {
-    title: "Restore livelihoods and agency",
-    detail: "Support income recovery and practical planning so participants can rebuild stability and make informed choices.",
+    title: "Help people rebuild their livelihoods and make their own choices",
+    detail:
+      "Support income recovery and practical planning so people can regain stability and control over their lives.",
     area: "Livelihoods",
   },
   {
-    title: "Advance inclusive preparedness",
+    title: "Help communities prepare for climate disruption",
     detail:
-      "Build community-led climate-preparedness plans and evidence that improve access to protection and recovery support.",
+      "Work with communities to develop preparedness plans and gather evidence that improves access to protection and recovery support.",
     area: "Preparedness and evidence",
   },
 ];
@@ -217,5 +223,17 @@ export function contactHref(subject?: string) {
   return subject ? `/contact?subject=${encodeURIComponent(subject)}` : "/contact";
 }
 
+export const SITE_URL = "https://www.oasisinnigeria.org";
+
 export const CONTACT_EMAIL = "talktous@oasisinnigeria.org";
+
+export const ADDRESS = {
+  street: "No. 5 Covenant Avenue, Shelter Afrique",
+  locality: "Uyo",
+  lga: "Uyo LGA",
+  region: "Akwa Ibom State",
+  country: "Nigeria",
+  countryCode: "NG",
+};
+export const ADDRESS_LINES = [ADDRESS.street, `${ADDRESS.locality}, ${ADDRESS.lga}`, `${ADDRESS.region}, ${ADDRESS.country}`];
 export const INSTAGRAM = { handle: "@oasis.in.nigeria", url: "https://www.instagram.com/oasis.in.nigeria/" };

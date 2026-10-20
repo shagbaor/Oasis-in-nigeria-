@@ -4,7 +4,7 @@ import { cacheLife } from "next/cache";
 import { Band, Motto } from "./Brand";
 import { BackToTop } from "./BackToTop";
 import { InstagramIcon, MailIcon, PinIcon } from "./Icons";
-import { CONTACT_EMAIL, FULL_NAME, INSTAGRAM } from "@/lib/identity";
+import { ADDRESS_LINES, CONTACT_EMAIL, FULL_NAME, INSTAGRAM } from "@/lib/identity";
 
 async function CurrentYear() {
   "use cache";
@@ -75,7 +75,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <PinIcon />
-                <span>Nigeria</span>
+                <address className="footer-address">{ADDRESS_LINES.join(", ")}</address>
               </li>
             </ul>
           </div>
