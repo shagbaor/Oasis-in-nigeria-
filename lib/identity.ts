@@ -228,12 +228,11 @@ export const SITE_URL = "https://www.oasisinnigeria.org";
 export const CONTACT_EMAIL = "talktous@oasisinnigeria.org";
 
 export const ADDRESS = {
-  street: "No. 5 Covenant Avenue, Shelter Afrique",
-  locality: "Uyo",
-  lga: "Uyo LGA",
-  region: "Akwa Ibom State",
+  locality: "Yenagoa",
+  lga: "Yenagoa LGA",
+  region: "Bayelsa State",
   country: "Nigeria",
   countryCode: "NG",
 };
-export const ADDRESS_LINES = [ADDRESS.street, `${ADDRESS.locality}, ${ADDRESS.lga}`, `${ADDRESS.region}, ${ADDRESS.country}`];
+export const ADDRESS_LINES = [`${ADDRESS.locality}, ${ADDRESS.lga}`, `${ADDRESS.region}, ${ADDRESS.country}`];
 export const INSTAGRAM = { handle: "@oasis.in.nigeria", url: "https://www.instagram.com/oasis.in.nigeria/" };

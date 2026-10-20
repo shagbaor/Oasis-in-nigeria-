@@ -18,7 +18,7 @@ const notoSerif = Noto_Serif({
 
 const SITE_TITLE = "OASIS — Outreach for Affirming Spaces, Inclusion and Sustainability";
 const SITE_DESCRIPTION =
-  "OASIS is a Nigerian non-profit helping marginalised people affected by climate-related displacement stay safe, recover their mental wellbeing and rebuild their lives. Based in Uyo, Akwa Ibom State.";
+  "OASIS is a Nigerian non-profit helping marginalised people affected by climate-related displacement stay safe, recover their mental wellbeing and rebuild their lives. Based in Yenagoa, Bayelsa State.";
 
 export const metadata: Metadata = {
   // All links, canonical addresses and preview images use the official domain.
@@ -35,8 +35,8 @@ export const metadata: Metadata = {
     "psychosocial support",
     "safer housing",
     "climate adaptation",
-    "Uyo",
-    "Akwa Ibom",
+    "Yenagoa",
+    "Bayelsa",
   ],
   category: "nonprofit",
   openGraph: {

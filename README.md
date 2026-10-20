@@ -15,7 +15,7 @@ Built with [Next.js](https://nextjs.org) (React) and a [Neon](https://neon.tech)
 - `/research` — research articles, each with an optional downloadable PDF
 - `/admin` — password-protected admin for writing blog posts and research, uploading images and PDFs, and reading messages
 
-Live at **https://www.oasisinnigeria.org**. OASIS is based at No. 5 Covenant Avenue, Shelter Afrique, Uyo, Uyo LGA, Akwa Ibom State, Nigeria.
+Live at **https://www.oasisinnigeria.org**. OASIS is based in Yenagoa, Yenagoa LGA, Bayelsa State, Nigeria.
 
 ## Setup
 

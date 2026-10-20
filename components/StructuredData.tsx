@@ -24,7 +24,6 @@ export function OrganizationJsonLd() {
         email: CONTACT_EMAIL,
         address: {
           "@type": "PostalAddress",
-          streetAddress: ADDRESS.street,
           addressLocality: ADDRESS.locality,
           addressRegion: ADDRESS.region,
           addressCountry: ADDRESS.countryCode,

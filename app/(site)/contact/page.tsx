@@ -9,7 +9,7 @@ export const metadata: Metadata = pageMetadata({
   title: "Contact",
   path: "/contact",
   description:
-    "Contact OASIS in Uyo, Akwa Ibom State, Nigeria, for support, partnership, funding or research. Email talktous@oasisinnigeria.org. Every enquiry is confidential.",
+    "Contact OASIS in Yenagoa, Bayelsa State, Nigeria, for support, partnership, funding or research. Email talktous@oasisinnigeria.org. Every enquiry is confidential.",
 });
 
 export default function ContactPage() {
