@@ -1,10 +1,18 @@
 "use client";
 
-export function ConfirmButton({ message, children }: { message: string; children: React.ReactNode }) {
+export function ConfirmButton({
+  message,
+  children,
+  className = "action-btn danger",
+}: {
+  message: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <button
       type="submit"
-      className="link-button danger"
+      className={className}
       onClick={(event) => {
         if (!window.confirm(message)) event.preventDefault();
       }}

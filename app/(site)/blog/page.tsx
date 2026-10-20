@@ -6,9 +6,10 @@ export const metadata: Metadata = {
   description: "Stories, news and updates from OASIS.",
 };
 
-export default function BlogPage() {
+export default function BlogPage({ searchParams }: PageProps<"/blog">) {
   return (
     <PostIndex
+      searchParams={searchParams}
       kind="blog"
       eyebrow="Stories and updates"
       title="The OASIS Blog"

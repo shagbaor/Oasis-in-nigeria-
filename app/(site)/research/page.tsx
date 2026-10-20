@@ -6,9 +6,10 @@ export const metadata: Metadata = {
   description: "Research, reports and findings from OASIS.",
 };
 
-export default function ResearchPage() {
+export default function ResearchPage({ searchParams }: PageProps<"/research">) {
   return (
     <PostIndex
+      searchParams={searchParams}
       kind="research"
       eyebrow="Evidence and insight"
       title="Research"

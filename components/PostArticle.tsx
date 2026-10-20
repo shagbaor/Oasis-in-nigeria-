@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getPublishedPost, type PostKind } from "@/lib/posts";
 import { formatDate } from "@/lib/format";
 import { fileUrl, formatBytes } from "@/lib/uploads";
+import { AdminEditBar } from "./AdminEditBar";
 
 const SECTIONS: Record<PostKind, { href: string; label: string }> = {
   blog: { href: "/blog", label: "All posts" },
@@ -34,6 +36,9 @@ export async function PostArticle({ kind, slug }: { kind: PostKind; slug: Promis
 
   return (
     <article className="post">
+      <Suspense fallback={null}>
+        <AdminEditBar postId={post.id} />
+      </Suspense>
       <header className="page-hero">
         <div className="container container-narrow">
           <Link href={section.href} className="back-link">

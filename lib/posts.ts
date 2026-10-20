@@ -56,9 +56,56 @@ export async function getPublishedPost(kind: PostKind, slug: string) {
   return rows[0] ?? null;
 }
 
-export function listAllPosts() {
+// Full-text search document: title matters most, then the summary, then the body.
+// Kept identical to the posts_search_idx expression in db/schema.sql so the index is used.
+const SEARCH_DOCUMENT = `(setweight(to_tsvector('english', coalesce(title, '')), 'A')
+  || setweight(to_tsvector('english', coalesce(excerpt, '')), 'B')
+  || setweight(to_tsvector('english', coalesce(content, '')), 'C'))`;
+
+// Matches whole words (with stemming, e.g. "housing" finds "house") or any part of the title or summary.
+const SEARCH_MATCH = `(${SEARCH_DOCUMENT} @@ websearch_to_tsquery('english', $1)
+  OR title ILIKE $2 OR excerpt ILIKE $2)`;
+
+const likePattern = (q: string) => `%${q.replace(/[\\%_]/g, "\\$&")}%`;
+
+export type SearchResult = PostSummary & { snippet: string | null };
+
+// Marks around matched words in search snippets; see components/Highlight.tsx.
+export const MATCH_START = "\u2063[";
+export const MATCH_END = "]\u2063";
+
+export function searchPublishedPosts(kind: PostKind, q: string, limit = 50) {
+  return query<SearchResult>(
+    `SELECT ${SUMMARY_COLUMNS},
+       ts_headline('english',
+         regexp_replace(content, '!?\\[([^\\]]*)\\]\\([^)]*\\)|[#*_>\x60|-]+', ' \\1 ', 'g'),
+         websearch_to_tsquery('english', $1),
+         'MaxWords=28, MinWords=12, MaxFragments=1, StartSel=${MATCH_START}, StopSel=${MATCH_END}') AS snippet
+     FROM posts
+     WHERE published AND kind = $3 AND ${SEARCH_MATCH}
+     ORDER BY ts_rank(${SEARCH_DOCUMENT}, websearch_to_tsquery('english', $1)) DESC, published_at DESC
+     LIMIT $4`,
+    [q, likePattern(q), kind, limit]
+  );
+}
+
+export type PostFilters = { q?: string; kind?: PostKind; status?: "published" | "draft" };
+
+export function listAllPosts({ q = "", kind, status }: PostFilters = {}) {
+  const conditions = ["TRUE"];
+  // Postgres rejects parameters a query doesn't use, so only send the search ones when searching.
+  const params: unknown[] = q ? [q, likePattern(q)] : [];
+  if (q) conditions.push(SEARCH_MATCH);
+  if (kind) {
+    params.push(kind);
+    conditions.push(`kind = $${params.length}`);
+  }
+  if (status) conditions.push(status === "published" ? "published" : "NOT published");
   return query<PostSummary>(
-    `SELECT ${SUMMARY_COLUMNS} FROM posts ORDER BY COALESCE(published_at, created_at) DESC`
+    `SELECT ${SUMMARY_COLUMNS} FROM posts WHERE ${conditions.join(" AND ")}
+     ORDER BY ${q ? `ts_rank(${SEARCH_DOCUMENT}, websearch_to_tsquery('english', $1)) DESC, ` : ""}
+       COALESCE(published_at, created_at) DESC`,
+    params
   );
 }
 

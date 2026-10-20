@@ -83,6 +83,17 @@ Sign in at `/admin` and click **New post**. Choose **Blog post** or **Research**
 
 Posts stay as drafts until you tick **Published**.
 
+### Finding, editing and deleting posts
+
+- The admin dashboard lists every post with **Edit**, **View** and **Delete**. Search by title, summary or text, and filter by type (blog or research) and status (published or draft).
+- The edit page has **View live** and a **Delete post** button at the bottom.
+- When you're signed in, every published post on the public site shows an **Edit this post** bar at the top.
+- **Messages** can be searched by name, email, subject or message.
+
+### Search on the site
+
+`/blog` and `/research` have a search box. It uses Postgres full-text search (titles rank highest, then summaries, then body text, with word forms matched, e.g. "housing" finds "house"), plus partial matches on titles and summaries. Results show a highlighted snippet. Links like `/research?q=floods` can be shared. Drafts never appear in public results.
+
 ### How files are stored
 
 Images and PDFs are stored in the Neon database, split into 2 MB chunks so each upload stays under Vercel's request size limit. Files are served from `/files/<id>/<name>` and cached by the browser and Vercel's CDN. When a post is deleted, or an image or PDF is removed from it, the file is deleted too. The admin dashboard shows how much storage files use; check the Neon console for your plan's limit.

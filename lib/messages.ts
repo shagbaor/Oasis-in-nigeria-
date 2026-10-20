@@ -22,8 +22,15 @@ export async function createMessage(input: MessageInput) {
   ]);
 }
 
-export function listMessages() {
-  return query<Message>("SELECT * FROM messages ORDER BY created_at DESC LIMIT 500");
+export function listMessages(q = "") {
+  if (!q) return query<Message>("SELECT * FROM messages ORDER BY created_at DESC LIMIT 500");
+  const pattern = `%${q.replace(/[\\%_]/g, "\\$&")}%`;
+  return query<Message>(
+    `SELECT * FROM messages
+     WHERE name ILIKE $1 OR email ILIKE $1 OR subject ILIKE $1 OR message ILIKE $1
+     ORDER BY created_at DESC LIMIT 500`,
+    [pattern]
+  );
 }
 
 export async function countUnreadMessages() {

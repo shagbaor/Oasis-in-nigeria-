@@ -393,6 +393,8 @@ html.menu-open { overflow: hidden; }
 
 /* ---------- Cards, blog and research ---------- */
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+/* Post grids keep column width even with one or two posts (e.g. search results). */
+.cards-3 { grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); }
 .card { background: var(--white); padding: 22px 22px; }
 .card p { color: var(--slate); margin: 0; }
 
@@ -796,4 +798,70 @@ html:not(.lenis) .scroll-progress { display: none; }
   ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) {
     animation-duration: 0s !important; animation-delay: 0s !important;
   }
+}
+
+/* ---------- Search ---------- */
+.search-bar { margin: 0 0 28px; max-width: 560px; }
+.admin-search { margin: 0 0 16px; max-width: 640px; }
+.search-box { position: relative; display: flex; align-items: center; min-height: 46px; }
+.search-box input {
+  width: 100%; font: inherit; font-size: 0.98rem; color: var(--forest);
+  padding: 11px 42px 11px 42px; border: 1.5px solid var(--pale-sage); border-radius: 999px; background: var(--white);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.search-box input::-webkit-search-cancel-button { display: none; }
+.search-box input:focus { outline: none; border-color: var(--forest); box-shadow: 0 0 0 4px rgba(34, 73, 60, 0.12); }
+.search-icon { position: absolute; left: 15px; color: var(--slate); pointer-events: none; }
+.search-clear {
+  position: absolute; right: 8px; width: 30px; height: 30px; border: 0; border-radius: 50%; cursor: pointer;
+  background: var(--light-cream); color: var(--forest); font-size: 1.2rem; line-height: 1;
+}
+.search-clear:hover { background: var(--pale-sage); }
+.search-spinner {
+  position: absolute; right: 14px; width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--pale-sage); border-top-color: var(--forest); animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.search-summary { font-size: 0.95rem; color: var(--slate); margin: 0 0 18px; }
+.search-snippet { font-size: 0.88rem; color: var(--slate); margin-top: 8px !important; }
+mark { background: var(--pale-terracotta); color: var(--forest); padding: 0 2px; border-radius: 2px; }
+
+/* ---------- Admin: filters, actions, editing ---------- */
+.filter-chips { display: flex; flex-wrap: wrap; gap: 10px 18px; margin: 0 0 18px; }
+.chip-group { display: inline-flex; background: var(--white); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
+.chip { padding: 5px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; color: var(--slate); text-decoration: none; transition: background 0.2s ease, color 0.2s ease; }
+.chip:hover { color: var(--forest); }
+.chip.is-active { background: var(--forest); color: var(--white); }
+.action-btn {
+  display: inline-block; font: inherit; font-size: 0.85rem; font-weight: 700; line-height: 1.2; cursor: pointer;
+  padding: 6px 12px; border-radius: var(--radius); border: 1.5px solid var(--pale-sage); background: var(--white);
+  color: var(--forest); text-decoration: none; transition: border-color 0.2s ease, background 0.2s ease;
+}
+.action-btn:hover { border-color: var(--forest); }
+.action-btn.danger { color: var(--danger); }
+.action-btn.danger:hover { border-color: var(--danger); background: #fdf1ef; }
+.row-actions { gap: 8px; }
+.btn-danger { background: var(--danger); border-color: var(--danger); color: var(--white); }
+.danger-zone {
+  max-width: 860px; margin-top: 28px; padding: 18px 22px; border: 1.5px solid #f0c9c3; border-radius: 12px; background: #fffaf9;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.danger-zone h2 { font-size: 1.05rem; margin: 0 0 4px; }
+.danger-zone p { margin: 0; }
+.admin-edit-bar { background: var(--terracotta); color: var(--white); }
+.admin-edit-bar-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; font-weight: 700; font-size: 0.92rem; }
+
+/* Admin posts list becomes cards on phones, with actions always visible. */
+@media (max-width: 760px) {
+  .table-wrap { background: none; border: 0; overflow: visible; }
+  .admin-table thead { display: none; }
+  .admin-table, .admin-table tbody { display: block; }
+  .admin-table tr { display: grid; grid-template-columns: auto auto 1fr; gap: 6px 12px; align-items: center; background: var(--white); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+  .admin-table tbody tr:nth-child(even) { background: var(--white); }
+  .admin-table td { border: 0; padding: 0; }
+  .admin-table .cell-title { grid-column: 1 / -1; }
+  .admin-table td[data-label="Type"] { font-size: 0.85rem; color: var(--slate); }
+  .admin-table td[data-label="Date"] { font-size: 0.85rem; color: var(--slate); justify-self: end; }
+  .admin-table .cell-actions { grid-column: 1 / -1; padding-top: 8px; border-top: 1px solid var(--line); }
+  .admin-table .row-actions { justify-content: flex-start; }
 }

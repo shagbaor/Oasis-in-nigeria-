@@ -51,3 +51,10 @@ ALTER TABLE posts ADD COLUMN IF NOT EXISTS kind text NOT NULL DEFAULT 'blog' CHE
 ALTER TABLE posts ADD COLUMN IF NOT EXISTS pdf_file_id uuid REFERENCES files (id) ON DELETE SET NULL;
 
 CREATE INDEX IF NOT EXISTS posts_kind_published_idx ON posts (kind, published, published_at DESC);
+
+-- Full-text search over posts. The expression must match SEARCH_DOCUMENT in lib/posts.ts.
+CREATE INDEX IF NOT EXISTS posts_search_idx ON posts USING GIN ((
+  setweight(to_tsvector('english', coalesce(title, '')), 'A')
+  || setweight(to_tsvector('english', coalesce(excerpt, '')), 'B')
+  || setweight(to_tsvector('english', coalesce(content, '')), 'C')
+));
