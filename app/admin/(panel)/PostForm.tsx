@@ -53,8 +53,10 @@ const IMAGE_ACCEPT = IMAGE_TYPES.join(",");
 export function PostForm({ post = EMPTY }: { post?: PostFields }) {
   const [state, action, pending] = useActionState<FormState, FormData>(savePost, null);
   const [cover, setCover] = useState(post.cover_image_url ?? "");
-  const [pdf, setPdf] = useState(post.pdf);
-  const [translations, setTranslations] = useState(post.translations);
+  // All PDFs, main one first, each with its language.
+  const [pdfs, setPdfs] = useState<(PdfFile & { language: string })[]>(
+    post.pdf ? [{ ...post.pdf, language: post.pdf_language }, ...post.translations] : [],
+  );
   const [uploading, setUploading] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
@@ -179,85 +181,56 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
         </span>
       </div>
 
-      <div className="field">
-        <span className="field-label">Downloadable PDF</span>
-        <input type="hidden" name="pdf_file_id" value={pdf?.id ?? ""} />
-        {pdf ? (
-          <div className="pdf-row">
-            <PdfChip
-              file={pdf}
-              onRemove={() => {
-                if (translations.length && !confirm("Removing the main PDF also removes it in the other languages. Continue?"))
-                  return;
-                setPdf(null);
-                setTranslations([]);
-              }}
-            />
+      <fieldset className="field pdf-languages">
+        <legend className="field-label">Downloadable PDF, in one or more languages</legend>
+        {pdfs.map((file, i) => (
+          <div className="pdf-row" key={file.id}>
+            {/* The first PDF is the main one; the rest are the same document in other languages. */}
+            <input type="hidden" name={i === 0 ? "pdf_file_id" : "translation_file_id"} value={file.id} />
+            <PdfChip file={file} main={i === 0 && pdfs.length > 1} onRemove={() => setPdfs((list) => list.filter((f) => f.id !== file.id))} />
             <label className="pdf-language">
               Language
-              <input name="pdf_language" defaultValue={post.pdf_language} list="pdf-languages" required maxLength={40} />
+              <input
+                name={i === 0 ? "pdf_language" : "translation_language"}
+                value={file.language}
+                onChange={(event) =>
+                  setPdfs((list) => list.map((f) => (f.id === file.id ? { ...f, language: event.target.value } : f)))
+                }
+                list="pdf-languages"
+                placeholder="e.g. Hausa"
+                autoFocus={!file.language}
+                required
+                maxLength={40}
+              />
             </label>
           </div>
-        ) : (
+        ))}
+        {pdfs.length === 0 && <input type="hidden" name="pdf_file_id" value="" />}
+        {pdfs.length <= MAX_PDF_TRANSLATIONS && (
           <FilePicker
-            label="Attach PDF"
+            label={pdfs.length === 0 ? "Attach PDF" : "Add the same PDF in another language"}
             accept={PDF_TYPE}
+            multiple
             disabled={!!uploading}
             onFiles={async (files) => {
-              const uploaded = await upload(files[0], "PDF");
-              if (uploaded) setPdf(uploaded);
+              for (const [i, file] of files.entries()) {
+                const label = files.length > 1 ? `PDF ${i + 1} of ${files.length}` : "PDF";
+                const uploaded = await upload(file, label);
+                if (!uploaded) continue;
+                setPdfs((list) =>
+                  list.length > MAX_PDF_TRANSLATIONS
+                    ? list
+                    : [...list, { id: uploaded.id, name: uploaded.name, size: uploaded.size, language: list.length === 0 ? "English" : "" }],
+                );
+              }
             }}
           />
         )}
-        <span className="hint">Optional. Shown as a download button at the end of the post (up to 25 MB).</span>
-      </div>
-
-      {pdf && (
-        <div className="field">
-          <span className="field-label">Same PDF in other languages</span>
-          {translations.map((translation, i) => (
-            <div className="pdf-row" key={translation.id}>
-              <input type="hidden" name="translation_file_id" value={translation.id} />
-              <PdfChip
-                file={translation}
-                onRemove={() => setTranslations((list) => list.filter((t) => t.id !== translation.id))}
-              />
-              <label className="pdf-language">
-                Language
-                <input
-                  name="translation_language"
-                  value={translation.language}
-                  onChange={(event) =>
-                    setTranslations((list) =>
-                      list.map((t, j) => (j === i ? { ...t, language: event.target.value } : t)),
-                    )
-                  }
-                  list="pdf-languages"
-                  placeholder="e.g. Hausa"
-                  autoFocus={!translation.language}
-                  required
-                  maxLength={40}
-                />
-              </label>
-            </div>
-          ))}
-          {translations.length < MAX_PDF_TRANSLATIONS && (
-            <FilePicker
-              label="Add PDF in another language"
-              accept={PDF_TYPE}
-              disabled={!!uploading}
-              small
-              onFiles={async (files) => {
-                const uploaded = await upload(files[0], "PDF");
-                if (uploaded) setTranslations((list) => [...list, { ...uploaded, language: "" }]);
-              }}
-            />
-          )}
-          <span className="hint">
-            Optional. Readers can choose which language to open or download. Pick a language from the list or type one.
-          </span>
-        </div>
-      )}
+        <span className="hint">
+          Optional, up to 25 MB each. Upload the PDF, then add the same document in other languages (you can choose
+          several files at once) and set the language of each. Readers choose which language to open or download.
+        </span>
+      </fieldset>
       <datalist id="pdf-languages">
         {PDF_LANGUAGES.map((language) => (
           <option key={language} value={language} />
@@ -330,9 +303,10 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
   );
 }
 
-function PdfChip({ file, onRemove }: { file: PdfFile; onRemove: () => void }) {
+function PdfChip({ file, main, onRemove }: { file: PdfFile; main?: boolean; onRemove: () => void }) {
   return (
     <div className="pdf-chip">
+      {main && <span className="pdf-main">Main</span>}
       <a href={fileUrl(file.id, file.name)} target="_blank" rel="noreferrer">
         {file.name}
       </a>

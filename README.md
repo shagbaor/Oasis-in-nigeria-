@@ -82,7 +82,7 @@ Sign in at `/admin` and click **New post**. Choose **Blog post** or **Publicatio
 - **Insert image** uploads a picture and places it where your cursor is. Large photos are shrunk in the browser (max 1800px) before uploading.
 - **Upload cover image** sets the picture shown at the top and on cards.
 - **Attach PDF** adds a download button at the end of the post (up to 25 MB). Set its **Language** (English by default).
-- **Add PDF in another language** attaches a translation of the same document, up to 10. Choose or type the language for each. Readers see one download row per language, and tiles show how many languages are available. In the database the publication is stored with kind `research`; the site calls it a publication.
+- **Add the same PDF in another language** attaches translations of the same document (you can pick several files at once), up to 10. Choose or type the language for each. The first PDF is the main one; remove it and the next becomes main. Readers see one download row per language, and tiles show how many languages are available. In the database the publication is stored with kind `research`; the site calls it a publication.
 
 Under **Visibility**, choose:
 

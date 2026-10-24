@@ -628,6 +628,9 @@ html.menu-open { overflow: hidden; }
 .pdf-row .pdf-chip { min-width: 0; }
 .pdf-row .pdf-chip a { overflow-wrap: anywhere; }
 .admin-form .pdf-language { font-size: 0.85rem; }
+fieldset.pdf-languages { border: 0; padding: 0; margin: 0; min-width: 0; }
+fieldset.pdf-languages > legend { padding: 0; margin-bottom: 8px; }
+.pdf-main { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: var(--pale-sage); color: var(--forest); padding: 2px 8px; border-radius: 999px; }
 @media (max-width: 640px) { .pdf-row { grid-template-columns: 1fr; } }
 .storage-note { margin-top: 20px; }
 
