@@ -5,6 +5,24 @@ export const CHUNK_SIZE = 2 * 1024 * 1024;
 export const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 export const PDF_TYPE = "application/pdf";
 
+// Suggested languages for PDFs; any other language can be typed in.
+export const PDF_LANGUAGES = [
+  "English",
+  "Hausa",
+  "Yoruba",
+  "Igbo",
+  "Nigerian Pidgin",
+  "Ijaw",
+  "Efik",
+  "Ibibio",
+  "Tiv",
+  "Kanuri",
+  "Fulfulde",
+  "French",
+  "Arabic",
+];
+export const MAX_PDF_TRANSLATIONS = 10;
+
 export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 export const MAX_PDF_BYTES = 25 * 1024 * 1024;
 

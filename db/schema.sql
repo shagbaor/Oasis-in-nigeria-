@@ -58,3 +58,8 @@ CREATE INDEX IF NOT EXISTS posts_search_idx ON posts USING GIN ((
   || setweight(to_tsvector('english', coalesce(excerpt, '')), 'B')
   || setweight(to_tsvector('english', coalesce(content, '')), 'C')
 ));
+
+-- The main PDF's language, and the same document in other languages:
+-- a list of {"file_id": "<uuid>", "language": "Hausa"} objects.
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS pdf_language text NOT NULL DEFAULT 'English';
+ALTER TABLE posts ADD COLUMN IF NOT EXISTS pdf_translations jsonb NOT NULL DEFAULT '[]';

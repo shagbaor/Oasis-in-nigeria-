@@ -102,6 +102,7 @@ export async function readChunk(id: string, index: number) {
 const UNREFERENCED = `NOT EXISTS (
   SELECT 1 FROM posts p
   WHERE p.pdf_file_id = f.id
+     OR p.pdf_translations::text LIKE '%' || f.id::text || '%'
      OR p.content LIKE '%' || f.id::text || '%'
      OR p.cover_image_url LIKE '%' || f.id::text || '%'
 )`;

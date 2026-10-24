@@ -4,7 +4,7 @@ import { startTransition, useActionState, useRef, useState } from "react";
 import Link from "next/link";
 import { savePost, type FormState } from "../actions";
 import { uploadFile } from "./upload";
-import { IMAGE_TYPES, PDF_TYPE, fileUrl, formatBytes } from "@/lib/uploads";
+import { IMAGE_TYPES, MAX_PDF_TRANSLATIONS, PDF_LANGUAGES, PDF_TYPE, fileUrl, formatBytes } from "@/lib/uploads";
 import { formatDateTime, fromSiteInputValue } from "@/lib/format";
 
 type PostFields = {
@@ -15,11 +15,16 @@ type PostFields = {
   excerpt: string;
   content: string;
   cover_image_url: string | null;
-  pdf: { id: string; name: string; size: number } | null;
+  pdf: PdfFile | null;
+  pdf_language: string;
+  // The same PDF in other languages.
+  translations: (PdfFile & { language: string })[];
   status: "draft" | "scheduled" | "published";
   // Scheduled time in Nigeria time, as "YYYY-MM-DDTHH:mm" (empty if none).
   publish_at: string;
 };
+
+type PdfFile = { id: string; name: string; size: number };
 
 type Visibility = "draft" | "now" | "schedule";
 const VISIBILITY_FOR_STATUS: Record<PostFields["status"], Visibility> = {
@@ -37,6 +42,8 @@ const EMPTY: PostFields = {
   content: "",
   cover_image_url: null,
   pdf: null,
+  pdf_language: "English",
+  translations: [],
   status: "draft",
   publish_at: "",
 };
@@ -47,6 +54,7 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
   const [state, action, pending] = useActionState<FormState, FormData>(savePost, null);
   const [cover, setCover] = useState(post.cover_image_url ?? "");
   const [pdf, setPdf] = useState(post.pdf);
+  const [translations, setTranslations] = useState(post.translations);
   const [uploading, setUploading] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
@@ -102,7 +110,7 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
         Type
         <select name="kind" defaultValue={post.kind}>
           <option value="blog">Blog post</option>
-          <option value="research">Research</option>
+          <option value="research">Publication</option>
         </select>
       </label>
       <label>
@@ -117,7 +125,7 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
           placeholder="Leave blank to generate from the title"
           maxLength={80}
         />
-        <span className="hint">The address of the page, e.g. /blog/your-slug or /research/your-slug</span>
+        <span className="hint">The address of the page, e.g. /blog/your-slug or /publications/your-slug</span>
       </label>
       <label>
         Summary
@@ -175,14 +183,20 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
         <span className="field-label">Downloadable PDF</span>
         <input type="hidden" name="pdf_file_id" value={pdf?.id ?? ""} />
         {pdf ? (
-          <div className="pdf-chip">
-            <a href={fileUrl(pdf.id, pdf.name)} target="_blank" rel="noreferrer">
-              {pdf.name}
-            </a>
-            <span className="muted small">{formatBytes(pdf.size)}</span>
-            <button type="button" className="link-button danger" onClick={() => setPdf(null)}>
-              Remove
-            </button>
+          <div className="pdf-row">
+            <PdfChip
+              file={pdf}
+              onRemove={() => {
+                if (translations.length && !confirm("Removing the main PDF also removes it in the other languages. Continue?"))
+                  return;
+                setPdf(null);
+                setTranslations([]);
+              }}
+            />
+            <label className="pdf-language">
+              Language
+              <input name="pdf_language" defaultValue={post.pdf_language} list="pdf-languages" required maxLength={40} />
+            </label>
           </div>
         ) : (
           <FilePicker
@@ -197,6 +211,58 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
         )}
         <span className="hint">Optional. Shown as a download button at the end of the post (up to 25 MB).</span>
       </div>
+
+      {pdf && (
+        <div className="field">
+          <span className="field-label">Same PDF in other languages</span>
+          {translations.map((translation, i) => (
+            <div className="pdf-row" key={translation.id}>
+              <input type="hidden" name="translation_file_id" value={translation.id} />
+              <PdfChip
+                file={translation}
+                onRemove={() => setTranslations((list) => list.filter((t) => t.id !== translation.id))}
+              />
+              <label className="pdf-language">
+                Language
+                <input
+                  name="translation_language"
+                  value={translation.language}
+                  onChange={(event) =>
+                    setTranslations((list) =>
+                      list.map((t, j) => (j === i ? { ...t, language: event.target.value } : t)),
+                    )
+                  }
+                  list="pdf-languages"
+                  placeholder="e.g. Hausa"
+                  autoFocus={!translation.language}
+                  required
+                  maxLength={40}
+                />
+              </label>
+            </div>
+          ))}
+          {translations.length < MAX_PDF_TRANSLATIONS && (
+            <FilePicker
+              label="Add PDF in another language"
+              accept={PDF_TYPE}
+              disabled={!!uploading}
+              small
+              onFiles={async (files) => {
+                const uploaded = await upload(files[0], "PDF");
+                if (uploaded) setTranslations((list) => [...list, { ...uploaded, language: "" }]);
+              }}
+            />
+          )}
+          <span className="hint">
+            Optional. Readers can choose which language to open or download. Pick a language from the list or type one.
+          </span>
+        </div>
+      )}
+      <datalist id="pdf-languages">
+        {PDF_LANGUAGES.map((language) => (
+          <option key={language} value={language} />
+        ))}
+      </datalist>
 
       {(uploading || uploadError) && (
         <p className={`form-status${uploadError ? " error" : ""}`} role="status" aria-live="polite">
@@ -261,6 +327,20 @@ export function PostForm({ post = EMPTY }: { post?: PostFields }) {
         <Link href="/admin">Cancel</Link>
       </div>
     </form>
+  );
+}
+
+function PdfChip({ file, onRemove }: { file: PdfFile; onRemove: () => void }) {
+  return (
+    <div className="pdf-chip">
+      <a href={fileUrl(file.id, file.name)} target="_blank" rel="noreferrer">
+        {file.name}
+      </a>
+      <span className="muted small">{formatBytes(file.size)}</span>
+      <button type="button" className="link-button danger" onClick={onRemove}>
+        Remove
+      </button>
+    </div>
   );
 }
 

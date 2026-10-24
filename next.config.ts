@@ -15,6 +15,13 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // Research was renamed Publications; keep old links and search results working.
+  async redirects() {
+    return [
+      { source: "/research", destination: "/publications", permanent: true },
+      { source: "/research/:slug", destination: "/publications/:slug", permanent: true },
+    ];
+  },
   async headers() {
     return [
       { source: "/:path*", headers: SECURITY_HEADERS },

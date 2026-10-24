@@ -4,7 +4,7 @@ Website for **OASIS — Outreach for Affirming Spaces, Inclusion and Sustainabil
 
 Built with [Next.js](https://nextjs.org) (React) and a [Neon](https://neon.tech) Postgres database, deployed on [Vercel](https://vercel.com).
 
-- `/` — home: motto, vision and mission, objectives, latest research and blog, with previews linking to every page
+- `/` — home: motto, vision and mission, objectives, latest publications and blog, with previews linking to every page
 - `/about` — the name, motto, political philosophy and principles
 - `/our-work` — thematic focus, the five objectives, OASIS Safe Ground
 - `/work-with-us` — partnership, funding and research collaboration
@@ -12,8 +12,8 @@ Built with [Next.js](https://nextjs.org) (React) and a [Neon](https://neon.tech)
 - `/donate` — what donations support and how to give
 - `/policies` — privacy, cookies, safeguarding, and stories and consent
 - `/blog` — public blog
-- `/research` — research articles, each with an optional downloadable PDF
-- `/admin` — password-protected admin for writing blog posts and research, uploading images and PDFs, and reading messages
+- `/publications` — research and reports, each with an optional downloadable PDF, which can come in several languages (old `/research` links redirect here)
+- `/admin` — password-protected admin for writing blog posts and publications, uploading images and PDFs, and reading messages
 
 Live at **https://www.oasisinnigeria.org**. OASIS is based in Yenagoa, Yenagoa LGA, Bayelsa State, Nigeria.
 
@@ -75,42 +75,43 @@ Replying to a message email replies straight to the person who sent it. Without 
 
 Edit `lib/donate.ts` to add an online giving link (for example a Paystack or Flutterwave payment page) or bank transfer details. The Donate page shows them automatically; until then it asks people to get in touch.
 
-## Writing blog posts and research
+## Writing blog posts and publications
 
-Sign in at `/admin` and click **New post**. Choose **Blog post** or **Research**, then write in Markdown.
+Sign in at `/admin` and click **New post**. Choose **Blog post** or **Publication**, then write in Markdown. Every post gets its own reading page, with its reading time and links to more posts at the end; on the blog and publications pages the whole tile opens it.
 
 - **Insert image** uploads a picture and places it where your cursor is. Large photos are shrunk in the browser (max 1800px) before uploading.
 - **Upload cover image** sets the picture shown at the top and on cards.
-- **Attach PDF** adds a download button at the end of the post (up to 25 MB).
+- **Attach PDF** adds a download button at the end of the post (up to 25 MB). Set its **Language** (English by default).
+- **Add PDF in another language** attaches a translation of the same document, up to 10. Choose or type the language for each. Readers see one download row per language, and tiles show how many languages are available. In the database the publication is stored with kind `research`; the site calls it a publication.
 
 Under **Visibility**, choose:
 
 - **Draft** — saved but hidden from the public site.
 - **Publish now** — live as soon as you save. Editing a live post keeps its original date.
-- **Schedule** — pick a date and time (Nigeria time, WAT). The post is saved straight away but stays hidden until then, and appears on the blog or research page, the homepage and in search automatically at that time. Picking a time in the past publishes it immediately with that date (useful for backdating).
+- **Schedule** — pick a date and time (Nigeria time, WAT). The post is saved straight away but stays hidden until then, and appears on the blog or publications page, the homepage and in search automatically at that time. Picking a time in the past publishes it immediately with that date (useful for backdating).
 
 Drafts and scheduled posts are hidden from visitors (their links show "not found"). Signed in as admin you can open them with **Preview** to see exactly how they will look, with a banner saying they're not public yet. The dashboard shows each post's status, the scheduled time, and has a **Scheduled** filter.
 
 ### Finding, editing and deleting posts
 
-- The admin dashboard lists every post with **Edit**, **View** and **Delete**. Search by title, summary or text, and filter by type (blog or research) and status (published, scheduled or draft).
+- The admin dashboard lists every post with **Edit**, **View** and **Delete**. Search by title, summary or text, and filter by type (blog or publication) and status (published, scheduled or draft).
 - The edit page has **View live** and a **Delete post** button at the bottom.
 - When you're signed in, every published post on the public site shows an **Edit this post** bar at the top.
 - **Messages** can be searched by name, email, subject or message.
 
 ### Search on the site
 
-`/blog` and `/research` have a search box. It uses Postgres full-text search (titles rank highest, then summaries, then body text, with word forms matched, e.g. "housing" finds "house"), plus partial matches on titles and summaries. Results show a highlighted snippet. Links like `/research?q=floods` can be shared. Drafts never appear in public results.
+`/blog` and `/publications` have a search box. It uses Postgres full-text search (titles rank highest, then summaries, then body text, with word forms matched, e.g. "housing" finds "house"), plus partial matches on titles and summaries. Results show a highlighted snippet. Links like `/publications?q=floods` can be shared. Drafts never appear in public results.
 
 ### How files are stored
 
-Images and PDFs are stored in the Neon database, split into 2 MB chunks so each upload stays under Vercel's request size limit. Files are served from `/files/<id>/<name>` and cached by the browser and Vercel's CDN. When a post is deleted, or an image or PDF is removed from it, the file is deleted too. The admin dashboard shows how much storage files use; check the Neon console for your plan's limit.
+Images and PDFs are stored in the Neon database, split into 2 MB chunks so each upload stays under Vercel's request size limit. Files are served from `/files/<id>/<name>` and cached by the browser and Vercel's CDN. When a post is deleted, or an image or PDF (including a translated PDF) is removed from it, the file is deleted too. The admin dashboard shows how much storage files use; check the Neon console for your plan's limit.
 
 ## Search engines and link previews
 
 - **Descriptions and titles** — every page sets its own title, description and canonical address with `pageMetadata()` from `lib/seo.ts`. A post's description is its excerpt, or the start of its text if there is no excerpt.
 - **Link preview picture** — `app/opengraph-image.tsx` draws the picture shown when a link is shared on WhatsApp, Facebook, LinkedIn, X and so on. Posts with a cover image use the cover instead.
-- **Structured data** — `components/StructuredData.tsx` tells Google that OASIS is a non-profit, with its logo (`public/oasis-logo.png`), address, email and Instagram. Research posts are marked as reports and blog posts as articles.
+- **Structured data** — `components/StructuredData.tsx` tells Google that OASIS is a non-profit, with its logo (`public/oasis-logo.png`), address, email and Instagram. Publications are marked as reports and blog posts as articles.
 - **Sitemap and robots** — `/sitemap.xml` lists every page and live post, and updates itself when a scheduled post goes live. `/robots.txt` keeps the admin out of search results.
 - **Address and domain** — `ADDRESS`, `CONTACT_EMAIL` and `SITE_URL` are in `lib/identity.ts`.
 
@@ -132,7 +133,7 @@ The logos in `public/` (`oasis-logo.svg`, `oasis-logo-reversed.svg` for dark bac
 ## Project layout
 
 ```
-app/(site)/          public pages: home, about, our work, blog, research
+app/(site)/          public pages: home, about, our work, blog, publications
 app/admin/           admin login, dashboard, post editor, messages
 app/admin/actions.ts admin Server Actions (all check the session first)
 components/          shared UI

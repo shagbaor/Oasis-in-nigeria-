@@ -35,6 +35,8 @@ async function EditPost({ params }: { params: PageProps<"/admin/posts/[id]">["pa
             post.pdf_file_id && post.pdf_name
               ? { id: post.pdf_file_id, name: post.pdf_name, size: post.pdf_size ?? 0 }
               : null,
+          pdf_language: post.pdf_language,
+          translations: post.translations,
           status: postStatus(post),
           publish_at: postStatus(post) === "scheduled" ? toSiteInputValue(post.published_at) : "",
         }}

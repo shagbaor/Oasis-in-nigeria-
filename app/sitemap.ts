@@ -7,7 +7,7 @@ const PAGES: { path: string; priority: number; changeFrequency: "weekly" | "mont
   { path: "/", priority: 1, changeFrequency: "weekly" },
   { path: "/about", priority: 0.8, changeFrequency: "monthly" },
   { path: "/our-work", priority: 0.9, changeFrequency: "monthly" },
-  { path: "/research", priority: 0.8, changeFrequency: "weekly" },
+  { path: "/publications", priority: 0.8, changeFrequency: "weekly" },
   { path: "/blog", priority: 0.8, changeFrequency: "weekly" },
   { path: "/work-with-us", priority: 0.7, changeFrequency: "monthly" },
   { path: "/donate", priority: 0.7, changeFrequency: "monthly" },

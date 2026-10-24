@@ -105,8 +105,8 @@ export default function OurWorkPage() {
               <Link href="/work-with-us" className="btn">
                 Partner with us
               </Link>
-              <Link href="/research" className="btn btn-outline">
-                Read our research
+              <Link href="/publications" className="btn btn-outline">
+                Read our publications
               </Link>
             </div>
           </div>

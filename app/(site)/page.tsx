@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import { PostCard } from "@/components/PostCard";
 import { Band, Label, PatternPanel, ProverbBox } from "@/components/Brand";
-import { listPublishedPosts, type PostKind } from "@/lib/posts";
+import { KIND_INFO, listPublishedPosts, type PostKind } from "@/lib/posts";
 import { AIM, FULL_NAME, MISSION, MISSION_AREAS, OBJECTIVES, PROVERBS, PURPOSE, VISION, WAYS_TO_WORK, contactHref } from "@/lib/identity";
 
 export const metadata: Metadata = pageMetadata({
@@ -27,15 +27,15 @@ async function LatestPosts({ kind }: { kind: PostKind }) {
 
   const research = kind === "research";
   return (
-    <section className={`section${research ? " section-white" : ""}`} id={kind}>
+    <section className={`section${research ? " section-white" : ""}`} id={research ? "publications" : "blog"}>
       <div className="container">
         <div className="section-head section-head-row">
           <div>
             <Label>{research ? "Evidence and insight" : "Stories and updates"}</Label>
-            <h2>{research ? "Latest research" : "From our blog"}</h2>
+            <h2>{research ? "Latest publications" : "From our blog"}</h2>
           </div>
-          <Link href={`/${kind}`} className="link-arrow">
-            {research ? "All research" : "All posts"}
+          <Link href={KIND_INFO[kind].href} className="link-arrow">
+            {research ? "All publications" : "All posts"}
           </Link>
         </div>
         <div className="cards cards-3">

@@ -16,11 +16,20 @@ export type Post = {
   pdf_file_id: string | null;
   pdf_name: string | null;
   pdf_size: number | null;
+  pdf_language: string;
+  // The same document in other languages, as stored.
+  pdf_translations: PdfTranslation[];
+  // Those translations with their file details, in order (only on full posts).
+  translations: PdfFile[];
+  reading_minutes: number;
   published: boolean;
   published_at: Date | null;
   created_at: Date;
   updated_at: Date;
 };
+
+export type PdfTranslation = { file_id: string; language: string };
+export type PdfFile = { id: string; name: string; size: number; language: string };
 
 export type PostSummary = Pick<
   Post,
@@ -31,14 +40,26 @@ export type PostSummary = Pick<
   | "excerpt"
   | "cover_image_url"
   | "pdf_file_id"
+  | "pdf_language"
+  | "pdf_translations"
   | "published"
   | "published_at"
   | "updated_at"
+  | "reading_minutes"
 >;
 
 export type PostInput = Pick<
   Post,
-  "kind" | "title" | "slug" | "excerpt" | "content" | "cover_image_url" | "pdf_file_id" | "published"
+  | "kind"
+  | "title"
+  | "slug"
+  | "excerpt"
+  | "content"
+  | "cover_image_url"
+  | "pdf_file_id"
+  | "pdf_language"
+  | "pdf_translations"
+  | "published"
 > & {
   // With published: a set time schedules the post (or backdates it). Null means "now",
   // keeping the original date if the post was already live.
@@ -55,15 +76,29 @@ export function postStatus(post: Pick<Post, "published" | "published_at">, now =
   return post.published_at && new Date(post.published_at) > now ? "scheduled" : "published";
 }
 
+// "research" is the stored kind; on the site it is called a publication.
+export const KIND_INFO: Record<PostKind, { label: string; plural: string; href: string }> = {
+  blog: { label: "Blog post", plural: "Blog", href: "/blog" },
+  research: { label: "Publication", plural: "Publications", href: "/publications" },
+};
+
 export function postPath(post: Pick<Post, "kind" | "slug">) {
-  return `/${post.kind === "research" ? "research" : "blog"}/${post.slug}`;
+  return `${KIND_INFO[post.kind].href}/${post.slug}`;
 }
 
-const SUMMARY_COLUMNS =
-  "id, kind, title, slug, excerpt, cover_image_url, pdf_file_id, published, published_at, updated_at";
+// Reading time assumes about 200 words, or 1,100 characters, a minute.
+const SUMMARY_COLUMNS = `id, kind, title, slug, excerpt, cover_image_url, pdf_file_id, pdf_language, pdf_translations,
+  published, published_at, updated_at, GREATEST(1, round(length(content) / 1100.0))::int AS reading_minutes`;
 
 const POST_WITH_PDF = `
-  SELECT p.*, f.name AS pdf_name, f.size AS pdf_size
+  SELECT p.*, f.name AS pdf_name, f.size AS pdf_size,
+    GREATEST(1, round(length(p.content) / 1100.0))::int AS reading_minutes,
+    COALESCE((
+      SELECT json_agg(json_build_object('id', tf.id, 'name', tf.name, 'size', tf.size, 'language', t.item->>'language')
+                      ORDER BY t.ord)
+      FROM jsonb_array_elements(p.pdf_translations) WITH ORDINALITY AS t(item, ord)
+      JOIN files tf ON tf.id::text = t.item->>'file_id' AND tf.complete
+    ), '[]') AS translations
   FROM posts p LEFT JOIN files f ON f.id = p.pdf_file_id AND f.complete`;
 
 export function listPublishedPosts(kind: PostKind, limit = 50) {
@@ -148,8 +183,12 @@ export async function getPost(id: number) {
   return rows[0] ?? null;
 }
 
-function referencedFiles(post: Pick<Post, "content" | "cover_image_url" | "pdf_file_id">) {
-  return [...fileIdsIn(post.content, post.cover_image_url), ...(post.pdf_file_id ? [post.pdf_file_id] : [])];
+function referencedFiles(post: Pick<Post, "content" | "cover_image_url" | "pdf_file_id" | "pdf_translations">) {
+  return [
+    ...fileIdsIn(post.content, post.cover_image_url),
+    ...(post.pdf_file_id ? [post.pdf_file_id] : []),
+    ...post.pdf_translations.map((t) => t.file_id),
+  ];
 }
 
 // published_at: drafts have none; a chosen time is used as given; otherwise keep the
@@ -163,8 +202,9 @@ END`;
 
 export async function createPost(input: PostInput) {
   const rows = await query<{ id: number }>(
-    `INSERT INTO posts (kind, title, slug, excerpt, content, cover_image_url, pdf_file_id, published, published_at)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, ${PUBLISHED_AT("$8", "$9", "NULL::timestamptz")})
+    `INSERT INTO posts (kind, title, slug, excerpt, content, cover_image_url, pdf_file_id, published, published_at,
+       pdf_language, pdf_translations)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, ${PUBLISHED_AT("$8", "$9", "NULL::timestamptz")}, $10, $11::jsonb)
      RETURNING id`,
     [
       input.kind,
@@ -176,6 +216,8 @@ export async function createPost(input: PostInput) {
       input.pdf_file_id,
       input.published,
       input.publish_at?.toISOString() ?? null,
+      input.pdf_language,
+      JSON.stringify(input.pdf_translations),
     ],
   );
   await cleanupFiles();
@@ -189,6 +231,7 @@ export async function updatePost(id: number, input: PostInput) {
        kind = $2, title = $3, slug = $4, excerpt = $5, content = $6, cover_image_url = $7, pdf_file_id = $8,
        published = $9,
        published_at = ${PUBLISHED_AT("$9", "$10", "published_at")},
+       pdf_language = $11, pdf_translations = $12::jsonb,
        updated_at = now()
      WHERE id = $1`,
     [
@@ -202,6 +245,8 @@ export async function updatePost(id: number, input: PostInput) {
       input.pdf_file_id,
       input.published,
       input.publish_at?.toISOString() ?? null,
+      input.pdf_language,
+      JSON.stringify(input.pdf_translations),
     ],
   );
   // Remove images or PDFs that were taken out of the post.

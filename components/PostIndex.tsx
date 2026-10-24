@@ -11,7 +11,7 @@ const firstValue = (value: string | string[] | undefined) => (Array.isArray(valu
 async function PostList({ kind, searchParams }: { kind: PostKind; searchParams: SearchParams }) {
   await connection();
   const q = firstValue((await searchParams).q).trim().slice(0, 100);
-  const noun = kind === "research" ? "research" : "posts";
+  const noun = kind === "research" ? "publications" : "posts";
 
   if (!q) {
     const posts = await listPublishedPosts(kind);
@@ -29,7 +29,7 @@ async function PostList({ kind, searchParams }: { kind: PostKind; searchParams: 
   return (
     <>
       <p className="search-summary" role="status">
-        {results.length === 0 ? "No" : results.length} {kind === "research" ? "result" : "post"}
+        {results.length === 0 ? "No" : results.length} {kind === "research" ? "publication" : "post"}
         {results.length === 1 ? "" : "s"} for “{q}”
       </p>
       {results.length === 0 ? (
@@ -72,8 +72,8 @@ export function PostIndex({
           <div className="search-bar">
             <Suspense fallback={<div className="search-box" />}>
               <SearchBox
-                label={kind === "research" ? "Search research" : "Search the blog"}
-                placeholder={kind === "research" ? "Search research…" : "Search the blog…"}
+                label={kind === "research" ? "Search publications" : "Search the blog"}
+                placeholder={kind === "research" ? "Search publications…" : "Search the blog…"}
               />
             </Suspense>
           </div>

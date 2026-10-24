@@ -11,7 +11,7 @@ import { InstagramIcon } from "./Icons";
 const LINKS = [
   { href: "/about", label: "About" },
   { href: "/our-work", label: "Our work" },
-  { href: "/research", label: "Research" },
+  { href: "/publications", label: "Publications" },
   { href: "/blog", label: "Blog" },
   { href: "/work-with-us", label: "Work with us" },
   { href: "/contact", label: "Contact" },

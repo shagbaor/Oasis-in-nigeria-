@@ -42,7 +42,7 @@ function FilterChips({ filters }: { filters: PostFilters }) {
       options: [
         ["", "All"],
         ["blog", "Blog"],
-        ["research", "Research"],
+        ["research", "Publications"],
       ],
     },
     {
@@ -139,7 +139,7 @@ async function Dashboard({ searchParams }: { searchParams: SearchParams }) {
                       </Link>
                       <div className="small muted">{postPath(post)}</div>
                     </td>
-                    <td data-label="Type">{post.kind === "research" ? "Research" : "Blog"}</td>
+                    <td data-label="Type">{post.kind === "research" ? "Publication" : "Blog"}</td>
                     <td data-label="Status">
                       <span className={`badge badge-${status}`}>
                         {status === "published" ? "Published" : status === "scheduled" ? "Scheduled" : "Draft"}
@@ -190,7 +190,7 @@ export default function AdminHome({ searchParams }: PageProps<"/admin">) {
   return (
     <>
       <div className="admin-title">
-        <h1>Blog &amp; research</h1>
+        <h1>Blog &amp; publications</h1>
         <Link href="/admin/posts/new" className="btn btn-small">
           New post
         </Link>
