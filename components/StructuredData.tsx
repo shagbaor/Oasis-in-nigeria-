@@ -1,4 +1,4 @@
-import { ADDRESS, AIM, CONTACT_EMAIL, FULL_NAME, INSTAGRAM, SITE_URL } from "@/lib/identity";
+import { ADDRESS, AIM, CONTACT_EMAIL, FULL_NAME, SITE_URL, SOCIALS } from "@/lib/identity";
 
 // Escape "<" so content can never close the <script> tag early.
 const json = (data: object) => JSON.stringify(data).replace(/</g, "\\u003c");
@@ -37,7 +37,7 @@ export function OrganizationJsonLd() {
           "Livelihood recovery",
           "Climate preparedness",
         ],
-        sameAs: [INSTAGRAM.url],
+        sameAs: SOCIALS.map((social) => social.url),
         contactPoint: { "@type": "ContactPoint", contactType: "general enquiries", email: CONTACT_EMAIL, areaServed: "NG" },
       },
       {

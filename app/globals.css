@@ -250,7 +250,16 @@ html:has(.site-header.is-scrolled) { --header-h: 58px; }
 .mobile-menu-motto { font-weight: 700; margin: 10px 0 0; }
 html.menu-open { overflow: hidden; }
 
-.social-link { display: inline-flex; align-items: center; gap: 8px; }
+/* Icon-only social media links: round buttons with at least a 40px tap target. */
+.social-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.social-links a {
+  display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  color: var(--forest); border: 1.5px solid rgba(34, 73, 60, 0.28); text-decoration: none;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.social-links a:hover { background: var(--forest); border-color: var(--forest); color: var(--white); transform: translateY(-2px); }
+.social-links-dark a { color: var(--white); border-color: rgba(233, 201, 184, 0.55); }
+.social-links-dark a:hover { background: var(--cream); border-color: var(--cream); color: var(--forest); }
 
 @media (max-width: 1040px) {
   .nav-desktop { display: none; }
@@ -506,6 +515,8 @@ html.menu-open { overflow: hidden; }
 .contact-list { list-style: none; padding: 0; margin: 28px 0 0; }
 .contact-list li { padding: 12px 0; border-bottom: 1px solid var(--line); display: flex; gap: 16px; }
 .contact-list span { width: 92px; flex: none; font-weight: 700; color: var(--forest); }
+.contact-list li:has(> .social-links) { align-items: center; }
+.contact-list .social-links li { padding: 0; border: 0; }
 
 .contact-form, .admin-form { display: grid; gap: 18px; }
 .contact-form { background: var(--cream); padding: clamp(20px, 3vw, 32px); border-top: 5px solid var(--forest); }
@@ -528,11 +539,6 @@ html.menu-open { overflow: hidden; }
 .footer-logo { height: 48px; width: auto; margin-bottom: 14px; }
 .footer-motto { font-size: 1.2rem; margin-bottom: 8px; }
 .footer-name { color: var(--cream); font-size: 0.9rem; margin: 0 0 18px; max-width: 300px; }
-.footer-follow {
-  display: inline-flex; align-items: center; gap: 8px; color: var(--white); text-decoration: none; font-weight: 700; font-size: 0.9rem;
-  border: 1.5px solid rgba(233, 201, 184, 0.6); padding: 8px 14px; border-radius: var(--radius); transition: background 0.25s ease, border-color 0.25s ease;
-}
-.footer-follow:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--pale-terracotta); }
 .footer-heading {
   color: var(--pale-terracotta); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.16em; margin: 6px 0 16px;
 }
@@ -564,7 +570,6 @@ html.menu-open { overflow: hidden; }
   .footer-logo { height: 40px; margin-bottom: 10px; }
   .footer-motto { font-size: 1.1rem; margin-bottom: 4px; }
   .footer-name { font-size: 0.82rem; margin: 0 auto 16px; max-width: 260px; }
-  .footer-follow { padding: 9px 18px; border-radius: 999px; font-size: 0.88rem; }
   .footer-heading { margin: 0 0 10px; }
   .footer-col ul { gap: 2px; }
   .footer-col a { font-size: 0.95rem; padding: 6px 0; }

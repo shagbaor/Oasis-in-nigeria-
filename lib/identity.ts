@@ -235,4 +235,11 @@ export const ADDRESS = {
   countryCode: "NG",
 };
 export const ADDRESS_LINES = [`${ADDRESS.locality}, ${ADDRESS.lga}`, `${ADDRESS.region}, ${ADDRESS.country}`];
-export const INSTAGRAM = { handle: "@oasis.in.nigeria", url: "https://www.instagram.com/oasis.in.nigeria/" };
+// Shown as icons in the footer, mobile menu and contact page, in this order.
+export const SOCIALS = [
+  { name: "Instagram", url: "https://www.instagram.com/oasis.in.nigeria/" },
+  { name: "Facebook", url: "https://www.facebook.com/share/19xAcq5VyR/" },
+  { name: "X", url: "https://x.com/oasisinnigeria" },
+  { name: "Threads", url: "https://www.threads.com/@oasis.in.nigeria" },
+] as const;
+export type SocialName = (typeof SOCIALS)[number]["name"];

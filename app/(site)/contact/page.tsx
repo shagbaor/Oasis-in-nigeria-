@@ -3,7 +3,8 @@ import { pageMetadata } from "@/lib/seo";
 import { Suspense } from "react";
 import { ContactForm } from "@/components/ContactForm";
 import { Label } from "@/components/Brand";
-import { ADDRESS_LINES, CONTACT_EMAIL, INSTAGRAM } from "@/lib/identity";
+import { ADDRESS_LINES, CONTACT_EMAIL } from "@/lib/identity";
+import { SocialLinks } from "@/components/SocialLinks";
 
 export const metadata: Metadata = pageMetadata({
   title: "Contact",
@@ -43,10 +44,8 @@ export default function ContactPage() {
                 <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
               </li>
               <li>
-                <span>Instagram</span>
-                <a href={INSTAGRAM.url} target="_blank" rel="noopener noreferrer">
-                  {INSTAGRAM.handle}
-                </a>
+                <span>Follow us</span>
+                <SocialLinks />
               </li>
               <li>
                 <span>Address</span>

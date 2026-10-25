@@ -5,8 +5,8 @@ import Link from "next/link";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { pauseSmoothScroll } from "@/lib/smooth-scroll";
-import { CONTACT_EMAIL, INSTAGRAM } from "@/lib/identity";
-import { InstagramIcon } from "./Icons";
+import { CONTACT_EMAIL } from "@/lib/identity";
+import { SocialLinks } from "./SocialLinks";
 
 const LINKS = [
   { href: "/about", label: "About" },
@@ -123,9 +123,7 @@ export function SiteHeader() {
             </Link>
           </div>
           <div className="mobile-menu-foot" style={{ "--i": LINKS.length + 1 } as React.CSSProperties}>
-            <a href={INSTAGRAM.url} target="_blank" rel="noopener noreferrer" className="social-link">
-              <InstagramIcon /> {INSTAGRAM.handle}
-            </a>
+            <SocialLinks />
             <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             <p className="mobile-menu-motto">
               Safety. Dignity. <span className="motto-accent">Recovery.</span>

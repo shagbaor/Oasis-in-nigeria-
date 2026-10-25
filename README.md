@@ -111,9 +111,9 @@ Images and PDFs are stored in the Neon database, split into 2 MB chunks so each 
 
 - **Descriptions and titles** — every page sets its own title, description and canonical address with `pageMetadata()` from `lib/seo.ts`. A post's description is its excerpt, or the start of its text if there is no excerpt.
 - **Link preview picture** — `app/opengraph-image.tsx` draws the picture shown when a link is shared on WhatsApp, Facebook, LinkedIn, X and so on. Posts with a cover image use the cover instead.
-- **Structured data** — `components/StructuredData.tsx` tells Google that OASIS is a non-profit, with its logo (`public/oasis-logo.png`), address, email and Instagram. Publications are marked as reports and blog posts as articles.
+- **Structured data** — `components/StructuredData.tsx` tells Google that OASIS is a non-profit, with its logo (`public/oasis-logo.png`), address, email and social media accounts. Publications are marked as reports and blog posts as articles.
 - **Sitemap and robots** — `/sitemap.xml` lists every page and live post, and updates itself when a scheduled post goes live. `/robots.txt` keeps the admin out of search results.
-- **Address and domain** — `ADDRESS`, `CONTACT_EMAIL` and `SITE_URL` are in `lib/identity.ts`.
+- **Address, domain and social media** — `ADDRESS`, `CONTACT_EMAIL`, `SITE_URL` and `SOCIALS` (Instagram, Facebook, X, Threads) are in `lib/identity.ts`. Add or change an account there and the icons in the footer, mobile menu and contact page update.
 
 To get the site into Google faster, add `www.oasisinnigeria.org` in [Google Search Console](https://search.google.com/search-console) and submit `https://www.oasisinnigeria.org/sitemap.xml`. Do the same in [Bing Webmaster Tools](https://www.bing.com/webmasters) if you like.
 

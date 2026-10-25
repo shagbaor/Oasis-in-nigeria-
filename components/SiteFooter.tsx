@@ -3,8 +3,9 @@ import Link from "next/link";
 import { cacheLife } from "next/cache";
 import { Band, Motto } from "./Brand";
 import { BackToTop } from "./BackToTop";
-import { InstagramIcon, MailIcon, PinIcon } from "./Icons";
-import { ADDRESS_LINES, CONTACT_EMAIL, FULL_NAME, INSTAGRAM } from "@/lib/identity";
+import { MailIcon, PinIcon } from "./Icons";
+import { SocialLinks } from "./SocialLinks";
+import { ADDRESS_LINES, CONTACT_EMAIL, FULL_NAME } from "@/lib/identity";
 
 async function CurrentYear() {
   "use cache";
@@ -42,9 +43,7 @@ export function SiteFooter() {
             <Image src="/oasis-logo-reversed.svg" alt="OASIS" width={118} height={48} className="footer-logo" />
             <Motto className="motto-on-dark footer-motto" />
             <p className="footer-name">{FULL_NAME}</p>
-            <a href={INSTAGRAM.url} target="_blank" rel="noopener noreferrer" className="footer-follow">
-              <InstagramIcon /> Follow us on Instagram
-            </a>
+            <SocialLinks className="social-links-dark" />
           </div>
 
           {COLUMNS.map((column) => (
@@ -66,12 +65,6 @@ export function SiteFooter() {
               <li>
                 <MailIcon />
                 <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
-              </li>
-              <li>
-                <InstagramIcon />
-                <a href={INSTAGRAM.url} target="_blank" rel="noopener noreferrer">
-                  {INSTAGRAM.handle}
-                </a>
               </li>
               <li>
                 <PinIcon />
