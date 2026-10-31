@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { Band, Label, ProverbBox } from "@/components/Brand";
-import { BANK_TRANSFER, ONLINE_GIVING_URL } from "@/lib/donate";
+import { BANK_TRANSFER, BITCOIN, ONLINE_GIVING_URL } from "@/lib/donate";
+import { BitcoinDonation } from "@/components/BitcoinDonation";
 import { AIM, CONTACT_EMAIL, OBJECTIVES, PROVERBS, contactHref } from "@/lib/identity";
 
 export const metadata: Metadata = pageMetadata({
@@ -114,6 +115,8 @@ export default function DonatePage() {
                 Contact us about giving
               </Link>
             </article>
+
+            {BITCOIN && <BitcoinDonation address={BITCOIN.address} note={BITCOIN.note} />}
           </div>
           <p className="muted donate-funders">
             Funding an organisation or programme? See <Link href="/work-with-us">work with us</Link>.

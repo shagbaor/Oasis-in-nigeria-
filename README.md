@@ -75,6 +75,8 @@ Replying to a message email replies straight to the person who sent it. Without 
 
 Edit `lib/donate.ts` to add an online giving link (for example a Paystack or Flutterwave payment page) or bank transfer details. The Donate page shows them automatically; until then it asks people to get in touch.
 
+Bitcoin donations use `BITCOIN` in the same file. The Donate page shows the address with a QR code (generated from the address when the site is built), a copy button, an "Open in wallet app" link and a warning to send only BTC on the Bitcoin network. To change the wallet, replace the address; to remove the option, set `BITCOIN` to `null`. Check any new address carefully: Bitcoin sent to a wrong address cannot be recovered.
+
 ## Writing blog posts and publications
 
 Sign in at `/admin` and click **New post**. Choose **Blog post** or **Publication**, then write in Markdown. Every post gets its own reading page, with its reading time and links to more posts at the end; on the blog and publications pages the whole tile opens it.
